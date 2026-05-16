@@ -1,0 +1,93 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: infrastructure/docker/backend/Dockerfile.prod
+
+    container_name: app_backend
+
+    restart: unless-stopped
+
+    env_file:
+      - .env
+
+    depends_on:
+      - db
+      - redis
+
+    ports:
+      - "8000:8000"
+
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+
+  frontend:
+    build:
+      context: .
+      dockerfile: infrastructure/docker/frontend/Dockerfile.prod
+
+    container_name: app_frontend
+
+    restart: unless-stopped
+
+    depends_on:
+      - backend
+
+    ports:
+      - "80:80"
+
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+
+  worker:
+    build:
+      context: .
+      dockerfile: infrastructure/docker/backend/Dockerfile.prod
+
+    container_name: app_worker
+
+    restart: unless-stopped
+
+    env_file:
+      - .env
+
+    depends_on:
+      - db
+      - redis
+
+    command: >
+      celery -A config worker -l info
+
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+
+  db:
+    image: postgres:16
+
+    container_name: app_db
+
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+    labels:
+      - "com.centurylinklabs.watchtower.enable=false"
+
+  redis:
+    image: redis:7
+
+    container_name: app_redis
+
+    restart: unless-stopped
+
+    labels:
+      - "com.centurylinklabs.watchtower.enable=false"
+
+volumes:
+  postgres_data:
