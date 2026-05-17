@@ -1,50 +1,65 @@
 # --------------------------------------------------
+# DOCKER COMPOSE
+# --------------------------------------------------
+
+COMPOSE=docker compose -f docker-compose.dev.yml
+
+# --------------------------------------------------
 # DEVELOPMENT
 # --------------------------------------------------
 
 up:
-	docker compose -f docker-compose.dev.yml up -d
+	$(COMPOSE) up -d
 
 build:
-	docker compose -f docker-compose.dev.yml up -d --build
+	$(COMPOSE) up -d --build
 
 down:
-	docker compose down
+	$(COMPOSE) down
 
 restart:
-	docker compose restart
+	$(COMPOSE) restart
+
+rb:
+	$(COMPOSE) restart backend
 
 logs:
-	docker compose logs -f
+	$(COMPOSE) logs -f backend
+
+logs-all:
+	$(COMPOSE) logs -f
 
 # --------------------------------------------------
 # BACKEND
 # --------------------------------------------------
 
 backend:
-	docker compose exec backend bash
+	$(COMPOSE) exec backend bash
 
 migrate:
-	docker compose exec backend python manage.py migrate
+	$(COMPOSE) exec backend python manage.py migrate
 
 makemigrations:
-	docker compose exec backend python manage.py makemigrations
+	$(COMPOSE) exec backend python manage.py makemigrations
 
 superuser:
-	docker compose exec backend python manage.py createsuperuser
+	$(COMPOSE) exec backend python manage.py createsuperuser
 
 test:
-	docker compose exec backend python manage.py test
+	$(COMPOSE) exec backend python manage.py test
 
 shell:
-	docker compose exec backend python manage.py shell
+	$(COMPOSE) exec backend python manage.py shell
+
+seed_habits:
+	$(COMPOSE) exec backend python manage.py seed_habits
 
 # --------------------------------------------------
 # FRONTEND
 # --------------------------------------------------
 
 frontend:
-	docker compose exec frontend sh
+	$(COMPOSE) exec frontend sh
 
 frontend-install:
 	cd frontend && npm install
@@ -60,20 +75,27 @@ frontend-build:
 # --------------------------------------------------
 
 worker:
-	docker compose exec worker bash
+	$(COMPOSE) exec worker bash
 
 restart-worker:
-	docker compose restart worker
+	$(COMPOSE) restart worker
 
 # --------------------------------------------------
 # DATABASE
 # --------------------------------------------------
 
 db:
-	docker compose exec db psql -U postgres
+	$(COMPOSE) exec db psql -U orkobit_user -d orkobit_db
 
-db-backup:
-	bash ./scripts/backup/db-backup.sh
+# --------------------------------------------------
+# CLEANUP
+# --------------------------------------------------
+
+clean:
+	docker system prune -af
+
+clean-volumes:
+	docker volume prune -f
 
 # --------------------------------------------------
 # SETUP

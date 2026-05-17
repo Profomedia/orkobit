@@ -24,4 +24,4 @@ RUN pip install --upgrade pip && \
 COPY backend .
 
 # Expose Django port
-EXPOSE 8000
+EXPOSE 8029
