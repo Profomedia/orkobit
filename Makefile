@@ -1,3 +1,4 @@
+.PHONY: up build down restart logs logs-all backend frontend worker clean
 # --------------------------------------------------
 # DOCKER COMPOSE
 # --------------------------------------------------
@@ -61,8 +62,8 @@ seed_habits:
 frontend:
 	$(COMPOSE) exec frontend sh
 
-frontend-install:
-	cd frontend && npm install
+frontend-i:
+	bash ./scripts/setup/init-frontend.sh
 
 frontend-dev:
 	cd frontend && npm run dev

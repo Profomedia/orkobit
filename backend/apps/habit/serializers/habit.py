@@ -4,7 +4,7 @@ from ..models.habit import Habit
 
 
 class HabitSerializer(serializers.ModelSerializer):
-
+    entries_count = serializers.SerializerMethodField()
     class Meta:
         model = Habit
 
@@ -19,6 +19,7 @@ class HabitSerializer(serializers.ModelSerializer):
             "color",
             "icon",
             "is_archived",
+            "entries_count",
             "created_at",
             "updated_at",
         ]
@@ -29,3 +30,6 @@ class HabitSerializer(serializers.ModelSerializer):
             "created_at",
             "updated_at",
         ]
+
+    def get_entries_count(self, obj):
+        return obj.entries.count()

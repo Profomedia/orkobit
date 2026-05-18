@@ -1,0 +1,65 @@
+@theme {
+
+  /* =======================
+     🎨 COLORS
+  ======================= */
+
+  --color-primary: #ac7c67;
+  --color-secondary: #202020;
+  --color-accent: #fed9b7;
+  --color-bg: #3c3c3c;
+  --color-lite: #d9d9d9;
+
+  --color-txt: #ffffff;
+  --color-txt-lt: #878787;
+  --color-txt-d: #181818;
+
+  /* =======================
+     🎯 CONTEXT COLORS
+  ======================= */
+
+  --color-h-bg: #202020;
+  --color-hover: #fcd0a1;
+
+  --color-log-primary: #3c3c3c;
+
+  /* =======================
+     📏 SPACING
+  ======================= */
+
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+
+  /* =======================
+     🔵 RADIUS
+  ======================= */
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-full: 9999px;
+
+  /* =======================
+     🌫 SHADOWS
+  ======================= */
+
+  --shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.2);
+
+  --shadow-md: 0 5px 15px rgba(0, 0, 0, 0.4);
+
+  --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.6);
+
+  /* =======================
+     🔤 TYPOGRAPHY
+  ======================= */
+
+  --font-main: "Poppins", sans-serif;
+
+  --text-sm: 0.85rem;
+  --text-base: 1rem;
+  --text-lg: 1.25rem;
+  --text-xl: 1.6rem;
+}

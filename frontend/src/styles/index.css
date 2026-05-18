@@ -1,0 +1,13 @@
+@import "tailwindcss";
+@import "./base/colors.css";
+
+html,
+body,
+#root {
+  width: 100%;
+  min-height: 100vh;
+}
+
+body {
+  @apply bg-zinc-950 text-zinc-100 antialiased;
+}
