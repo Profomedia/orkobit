@@ -1,35 +1,12 @@
 from rest_framework import serializers
 
-from ..models.habit import Habit
+from apps.habit.models.habit import Habit
 
 
 class HabitSerializer(serializers.ModelSerializer):
-    entries_count = serializers.SerializerMethodField()
+
     class Meta:
+
         model = Habit
 
-        fields = [
-            "id",
-            "uuid",
-            "name",
-            "description",
-            "habit_type",
-            "target_value",
-            "unit",
-            "color",
-            "icon",
-            "is_archived",
-            "entries_count",
-            "created_at",
-            "updated_at",
-        ]
-
-        read_only_fields = [
-            "id",
-            "uuid",
-            "created_at",
-            "updated_at",
-        ]
-
-    def get_entries_count(self, obj):
-        return obj.entries.count()
+        fields = "__all__"

@@ -6,17 +6,21 @@ from apps.habit.models.habit_entry import HabitEntry
 
 @admin.register(Habit)
 class HabitAdmin(admin.ModelAdmin):
+
     list_display = (
         "name",
         "habit_type",
+        "frequency_type",
         "target_value",
         "unit",
         "is_archived",
+        "position",
         "created_at",
     )
 
     list_filter = (
         "habit_type",
+        "frequency_type",
         "is_archived",
         "created_at",
     )
@@ -27,34 +31,42 @@ class HabitAdmin(admin.ModelAdmin):
     )
 
     readonly_fields = (
-        "uuid",
+        "id",
         "created_at",
         "updated_at",
     )
 
-    ordering = ("-created_at",)
+    ordering = (
+        "position",
+        "-created_at",
+    )
 
     fieldsets = (
+
         (
             "Core Information",
             {
                 "fields": (
-                    "uuid",
+                    "id",
                     "name",
                     "description",
                     "habit_type",
                 )
             },
         ),
+
         (
             "Tracking Configuration",
             {
                 "fields": (
                     "target_value",
                     "unit",
+                    "frequency_type",
+                    "weekly_target",
                 )
             },
         ),
+
         (
             "Appearance",
             {
@@ -64,6 +76,16 @@ class HabitAdmin(admin.ModelAdmin):
                 )
             },
         ),
+
+        (
+            "Organization",
+            {
+                "fields": (
+                    "position",
+                )
+            },
+        ),
+
         (
             "Status",
             {
@@ -72,6 +94,7 @@ class HabitAdmin(admin.ModelAdmin):
                 )
             },
         ),
+
         (
             "Timestamps",
             {
@@ -86,58 +109,78 @@ class HabitAdmin(admin.ModelAdmin):
 
 @admin.register(HabitEntry)
 class HabitEntryAdmin(admin.ModelAdmin):
+
     list_display = (
         "habit",
         "date",
-        "completed",
+        "is_completed",
+        "value_boolean",
         "value_number",
         "duration_seconds",
         "created_at",
     )
 
     list_filter = (
-        "completed",
         "date",
         "created_at",
     )
 
     search_fields = (
         "habit__name",
+        "notes",
     )
 
     readonly_fields = (
-        "uuid",
+        "id",
+        "is_completed",
         "created_at",
         "updated_at",
     )
 
-    ordering = ("-date",)
+    ordering = (
+        "-date",
+    )
 
-    autocomplete_fields = ("habit",)
+    autocomplete_fields = (
+        "habit",
+    )
 
     fieldsets = (
+
         (
             "Entry Information",
             {
                 "fields": (
-                    "uuid",
+                    "id",
                     "habit",
                     "date",
-                    "completed",
+                    "is_completed",
                 )
             },
         ),
+
         (
             "Tracked Values",
             {
                 "fields": (
-                    "value_number",
                     "value_boolean",
+                    "value_number",
                     "value_text",
                     "duration_seconds",
+                    "notes",
                 )
             },
         ),
+
+        (
+            "Organization",
+            {
+                "fields": (
+                    "position",
+                )
+            },
+        ),
+
         (
             "Timestamps",
             {

@@ -1,5 +1,4 @@
 import {
-  BrowserRouter,
   Routes,
   Route,
 } from "react-router-dom";
@@ -14,11 +13,14 @@ import LogoutPage from "@/features/auth/pages/LogoutPage";
 import ProtectedRoute from "@/features/auth/components/ProtectedRoute";
 
 import NotFoundPage from "@/components/feedback/NotFoundPage";
+import HabitDetailPage from "@/features/habits/pages/HabitDetailPage";
+
+import TodayPage from "@/features/daily-checkin/pages/TodayPage";
+import CreateHabitPage from "@/features/dashboard/pages/CreateHabitPage";
 
 export default function AppRouter() {
 
   return (
-    <BrowserRouter>
 
       <Routes>
 
@@ -41,6 +43,32 @@ export default function AppRouter() {
             </ProtectedRoute>
           }
         />
+
+        <Route
+          path="/habit/new"
+          element={
+            <ProtectedRoute>
+              <CreateHabitPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/today"
+          element={
+            <ProtectedRoute>
+              <TodayPage />
+            </ProtectedRoute>
+          }
+        />
+
+      <Route
+        path="/habits/:uuid"
+        element={
+          <ProtectedRoute>
+            <HabitDetailPage />
+          </ProtectedRoute>
+        }
+      />
 
         {/* Public Routes */}
 
@@ -68,6 +96,5 @@ export default function AppRouter() {
 
       </Routes>
 
-    </BrowserRouter>
   );
 }

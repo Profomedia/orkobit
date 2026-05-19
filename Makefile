@@ -18,6 +18,12 @@ build:
 down:
 	$(COMPOSE) down
 
+purge:
+	$(COMPOSE) down -v
+
+# 	find . -path "*/migrations/*.py" -not -name "__init__.py" -delete
+#   find . -path "*/migrations/*.pyc" -delete
+
 restart:
 	$(COMPOSE) restart
 
@@ -54,6 +60,7 @@ shell:
 
 seed_habits:
 	$(COMPOSE) exec backend python manage.py seed_habits
+
 
 # --------------------------------------------------
 # FRONTEND

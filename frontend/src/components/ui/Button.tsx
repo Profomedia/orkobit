@@ -105,7 +105,7 @@ export default function Button({
 
         "disabled:opacity-50 disabled:cursor-not-allowed",
 
-        "flex items-center justify-center gap-2",
+        "flex flex-col items-center justify-center gap-2",
 
         // Variant
 
@@ -143,13 +143,14 @@ export default function Button({
                         border-black/30
                         border-t-black
                         animate-spin
+                        
                     "
         />
       )}
 
       {/* Content */}
 
-      <span>
+      <span className="flex items-center justify-center gap-2">
         {children}
       </span>
 
