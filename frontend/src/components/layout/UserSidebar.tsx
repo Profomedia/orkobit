@@ -1,179 +1,115 @@
-import {
-  useEffect,
-  useState,
-} from "react";
+import {useEffect, useState} from "react";
 
-import {
-  Link,
-  useLocation,
-  useNavigate,
-} from "react-router-dom";
+import {Link, useLocation, useNavigate} from "react-router-dom";
 
-import { User } from "lucide-react";
+import {User} from "lucide-react";
 
 import useUser from "@/hooks/useUser";
 
-import { MENU_ITEMS } from "@/helpers/sidebar_Items";
-
+import {MENU_ITEMS} from "@/helpers/sidebar_Items";
 
 // --------------------------------------------------
 // TYPES
 // --------------------------------------------------
 
 interface MenuItem {
-  label: string;
-  path: string;
-  icon: React.ElementType;
-  isAction?: boolean;
+    label: string;
+    path: string;
+    icon: React.ElementType;
+    isAction?: boolean;
 }
-
 
 // --------------------------------------------------
 // COMPONENT
 // --------------------------------------------------
 
 export default function UserSideBar() {
+    const [isOpen, setIsOpen] = useState(false);
 
-  const [isOpen, setIsOpen] =
-    useState(false);
+    const {user, loading, error} = useUser();
 
-  const {
-    user,
-    loading,
-    error,
-  } = useUser();
+    const navigate = useNavigate();
 
-  const navigate = useNavigate();
+    const location = useLocation();
 
-  const location = useLocation();
+    // --------------------------------------------------
+    // CLOSE ON ESC
+    // --------------------------------------------------
 
+    useEffect(() => {
+        const handleKey = (e: KeyboardEvent) => {
+            if (e.key === "Escape") {
+                setIsOpen(false);
+            }
+        };
 
-  // --------------------------------------------------
-  // CLOSE ON ESC
-  // --------------------------------------------------
+        window.addEventListener("keydown", handleKey);
 
-  useEffect(() => {
+        return () => {
+            window.removeEventListener("keydown", handleKey);
+        };
+    }, []);
 
-    const handleKey = (
-      e: KeyboardEvent
-    ) => {
+    // --------------------------------------------------
+    // TOGGLE
+    // --------------------------------------------------
 
-      if (e.key === "Escape") {
-        setIsOpen(false);
-      }
+    const handleToggleSidebar = () => {
+        setIsOpen((prev) => !prev);
     };
 
-    window.addEventListener(
-      "keydown",
-      handleKey
-    );
+    // --------------------------------------------------
+    // LOGOUT
+    // --------------------------------------------------
 
-    return () => {
+    const handleLogout = (e: React.MouseEvent) => {
+        e.preventDefault();
 
-      window.removeEventListener(
-        "keydown",
-        handleKey
-      );
+        navigate("/logout");
     };
 
-  }, []);
+    // --------------------------------------------------
+    // LOADING
+    // --------------------------------------------------
 
-
-  // --------------------------------------------------
-  // TOGGLE
-  // --------------------------------------------------
-
-  const handleToggleSidebar = () => {
-
-    setIsOpen((prev) => !prev);
-  };
-
-
-  // --------------------------------------------------
-  // LOGOUT
-  // --------------------------------------------------
-
-  const handleLogout = (
-    e: React.MouseEvent
-  ) => {
-
-    e.preventDefault();
-
-    navigate("/logout");
-  };
-
-
-  // --------------------------------------------------
-  // LOADING
-  // --------------------------------------------------
-
-  if (loading) {
-
-    return (
-      <div className="text-sm text-txt-lt">
-
-        Loading...
-
-      </div>
-    );
-  }
-
-
-  // --------------------------------------------------
-  // ERROR
-  // --------------------------------------------------
-
-  if (error) {
-
-    return (
-      <div className="text-sm text-red-400">
-
-        Error loading user
-
-      </div>
-    );
-  }
-
-
-  // --------------------------------------------------
-  // USER INITIALS
-  // --------------------------------------------------
-
-  const getInitials = () => {
-
-    if (!user?.username) {
-      return "U";
+    if (loading) {
+        return <div className="text-sm text-txt-lt">Loading...</div>;
     }
 
-    return user.username
-      .slice(0, 1)
-      .toUpperCase();
-  };
+    // --------------------------------------------------
+    // ERROR
+    // --------------------------------------------------
 
+    if (error) {
+        return <div className="text-sm text-red-400">Error loading user</div>;
+    }
 
-  // --------------------------------------------------
-  // ACTIVE ROUTE
-  // --------------------------------------------------
+    // --------------------------------------------------
+    // USER INITIALS
+    // --------------------------------------------------
 
-  const isActive = (
-    path: string
-  ) => {
+    const getInitials = () => {
+        if (!user?.username) {
+            return "U";
+        }
 
-    return (
-      location.pathname === path
-    );
-  };
+        return user.username.slice(0, 1).toUpperCase();
+    };
 
+    // --------------------------------------------------
+    // ACTIVE ROUTE
+    // --------------------------------------------------
 
-  // --------------------------------------------------
-  // MENU STYLES
-  // --------------------------------------------------
+    const isActive = (path: string) => {
+        return location.pathname === path;
+    };
 
-  const menuItemClass = (
-    path: string
-  ) => {
+    // --------------------------------------------------
+    // MENU STYLES
+    // --------------------------------------------------
 
-    return `
+    const menuItemClass = (path: string) => {
+        return `
             flex
             items-center
             gap-3
@@ -186,73 +122,67 @@ export default function UserSideBar() {
             transition-all
             duration-200
 
-            ${isActive(path)
-        ? `
+            ${
+                isActive(path)
+                    ? `
                         bg-accent
                         text-txt-d
                       `
-        : `
+                    : `
                         text-accent
                         hover:bg-accent
                         hover:text-txt-d
                       `
-      }
+            }
         `;
-  };
+    };
 
+    // --------------------------------------------------
+    // UI
+    // --------------------------------------------------
 
-  // --------------------------------------------------
-  // UI
-  // --------------------------------------------------
+    return (
+        <div>
+            {/* -------------------------------------------------- */}
+            {/* AVATAR BUTTON */}
+            {/* -------------------------------------------------- */}
 
-  return (
-    <div>
-
-      {/* -------------------------------------------------- */}
-      {/* AVATAR BUTTON */}
-      {/* -------------------------------------------------- */}
-
-      <button
-        onClick={handleToggleSidebar}
-        className="
+            <button
+                onClick={handleToggleSidebar}
+                className="
                     text-xl
                     text-txt
                     hover:scale-110
                     transition-transform
                     cursor-pointer
                 "
-      >
+            >
+                <User />
+            </button>
 
-        <User />
+            {/* -------------------------------------------------- */}
+            {/* OVERLAY */}
+            {/* -------------------------------------------------- */}
 
-      </button>
-
-
-      {/* -------------------------------------------------- */}
-      {/* OVERLAY */}
-      {/* -------------------------------------------------- */}
-
-      {isOpen && (
-
-        <div
-          className="
+            {isOpen && (
+                <div
+                    className="
                         fixed
                         inset-0
                         bg-black/50
                         backdrop-blur-sm
                         z-40
                     "
-          onClick={handleToggleSidebar}
-        />
-      )}
+                    onClick={handleToggleSidebar}
+                />
+            )}
 
+            {/* -------------------------------------------------- */}
+            {/* SIDEBAR */}
+            {/* -------------------------------------------------- */}
 
-      {/* -------------------------------------------------- */}
-      {/* SIDEBAR */}
-      {/* -------------------------------------------------- */}
-
-      <aside
-        className={`
+            <aside
+                className={`
                     fixed
                     top-0
                     right-0
@@ -269,56 +199,44 @@ export default function UserSideBar() {
                     duration-300
                     ease-in-out
 
-                    ${isOpen
-            ? "translate-x-0"
-            : "translate-x-full"
-          }
+                    ${isOpen ? "translate-x-0" : "translate-x-full"}
                 `}
-      >
+            >
+                {/* -------------------------------------------------- */}
+                {/* CLOSE */}
+                {/* -------------------------------------------------- */}
 
-        {/* -------------------------------------------------- */}
-        {/* CLOSE */}
-        {/* -------------------------------------------------- */}
-
-        <div className="flex justify-end p-4">
-
-          <button
-            onClick={
-              handleToggleSidebar
-            }
-            className="
+                <div className="flex justify-end p-4">
+                    <button
+                        onClick={handleToggleSidebar}
+                        className="
                             text-txt-lt
                             hover:text-txt
                             transition
                             text-xl
                         "
-          >
+                    >
+                        ✕
+                    </button>
+                </div>
 
-            ✕
+                {/* -------------------------------------------------- */}
+                {/* USER */}
+                {/* -------------------------------------------------- */}
 
-          </button>
-
-        </div>
-
-
-        {/* -------------------------------------------------- */}
-        {/* USER */}
-        {/* -------------------------------------------------- */}
-
-        <div
-          className="
+                <div
+                    className="
                         flex
                         flex-col
                         items-center
                         px-6
                         pb-8
                     "
-        >
+                >
+                    {/* Avatar */}
 
-          {/* Avatar */}
-
-          <div
-            className="
+                    <div
+                        className="
                             w-24
                             h-24
                             rounded-full
@@ -334,148 +252,88 @@ export default function UserSideBar() {
 
                             text-accent
                         "
-          >
+                    >
+                        {getInitials()}
+                    </div>
 
-            {getInitials()}
+                    {/* Welcome */}
 
-          </div>
-
-
-          {/* Welcome */}
-
-          <div className="mt-5 text-center">
-
-            <p
-              className="
+                    <div className="mt-5 text-center">
+                        <p
+                            className="
                                 text-xs
                                 uppercase
                                 tracking-widest
                                 text-txt-lt
                             "
-            >
-              Welcome
-            </p>
+                        >
+                            Welcome
+                        </p>
 
-            <p
-              className="
+                        <p
+                            className="
                                 mt-2
                                 text-lg
                                 font-semibold
                                 text-accent
                             "
-            >
+                        >
+                            {user?.username || "User"}
+                        </p>
+                    </div>
+                </div>
 
-              {user?.username || "User"}
+                {/* -------------------------------------------------- */}
+                {/* MENU */}
+                {/* -------------------------------------------------- */}
 
-            </p>
+                <nav>
+                    <ul>
+                        {MENU_ITEMS.map((item: MenuItem) => {
+                            const Icon = item.icon;
 
-          </div>
+                            // Logout Action
 
-        </div>
-
-
-        {/* -------------------------------------------------- */}
-        {/* MENU */}
-        {/* -------------------------------------------------- */}
-
-        <nav>
-
-          <ul>
-
-            {MENU_ITEMS.map(
-              (
-                item: MenuItem
-              ) => {
-
-                const Icon =
-                  item.icon;
-
-                // Logout Action
-
-                if (
-                  item.isAction
-                ) {
-
-                  return (
-
-                    <li
-                      key={
-                        item.label
-                      }
-
-                      onClick={
-                        handleLogout
-                      }
-
-                      className={`
+                            if (item.isAction) {
+                                return (
+                                    <li
+                                        key={item.label}
+                                        onClick={handleLogout}
+                                        className={`
                                                 ${menuItemClass(item.path)}
                                                 cursor-pointer
                                             `}
-                    >
-
-                      <Icon
-                        className="
+                                    >
+                                        <Icon
+                                            className="
                                                     text-lg
                                                 "
-                      />
+                                        />
 
-                      <span>
+                                        <span>{item.label}</span>
+                                    </li>
+                                );
+                            }
 
-                        {item.label}
+                            // Normal Route
 
-                      </span>
-
-                    </li>
-                  );
-                }
-
-                // Normal Route
-
-                return (
-
-                  <Link
-                    key={
-                      item.label
-                    }
-
-                    to={
-                      item.path
-                    }
-                  >
-
-                    <li
-                      className={
-                        menuItemClass(
-                          item.path
-                        )
-                      }
-                    >
-
-                      <Icon
-                        className="
+                            return (
+                                <Link key={item.label} to={item.path}>
+                                    <li className={menuItemClass(item.path)}>
+                                        <Icon
+                                            className="
                                                     text-lg
                                                 "
-                      />
+                                        />
 
-                      <span>
-
-                        {item.label}
-
-                      </span>
-
-                    </li>
-
-                  </Link>
-                );
-              }
-            )}
-
-          </ul>
-
-        </nav>
-
-      </aside>
-
-    </div>
-  );
+                                        <span>{item.label}</span>
+                                    </li>
+                                </Link>
+                            );
+                        })}
+                    </ul>
+                </nav>
+            </aside>
+        </div>
+    );
 }

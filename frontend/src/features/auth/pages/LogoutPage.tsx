@@ -1,14 +1,11 @@
-import { Navigate } from "react-router-dom";
+import {Navigate} from "react-router-dom";
 
-import { useAuthStore } from "../store/authStore";
+import {useAuthStore} from "../store/authStore";
 
 export default function LogoutPage() {
+    const logout = useAuthStore((state) => state.logout);
 
-  const logout = useAuthStore(
-    (state) => state.logout
-  );
+    logout();
 
-  logout();
-
-  return <Navigate to="/login" replace />;
+    return <Navigate to="/login" replace />;
 }

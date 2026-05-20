@@ -1,20 +1,17 @@
-import type { Habit } from "@/types/habit.types";
+import type {Habit} from "@/types/habit.types";
 
-import { useDailyCheckinStore } from "../store/dailyCheckin.store";
+import {useDailyCheckinStore} from "../store/dailyCheckin.store";
 
-import { useSaveHabitEntry } from "./useSaveHabitEntry";
+import {useSaveHabitEntry} from "./useSaveHabitEntry";
 
-import { buildHabitEntryPayload } from "../utils/buildHabitEntryPayload";
+import {buildHabitEntryPayload} from "../utils/buildHabitEntryPayload";
 import axios from "axios";
 export function useHandleHabitValueChange() {
-    const { setValue } = useDailyCheckinStore();
+    const {setValue} = useDailyCheckinStore();
 
-    const { mutateAsync: saveHabitEntryMutation } = useSaveHabitEntry();
+    const {mutateAsync: saveHabitEntryMutation} = useSaveHabitEntry();
 
-    async function handleHabitValueChange(
-        habit: Habit,
-        value: boolean | number,
-    ) {
+    async function handleHabitValueChange(habit: Habit, value: boolean | number) {
         const habitId = String(habit.id);
 
         /**
@@ -28,10 +25,7 @@ export function useHandleHabitValueChange() {
             await saveHabitEntryMutation(payload);
         } catch (error) {
             if (axios.isAxiosError(error)) {
-                console.error(
-                    "Backend validation error:",
-                    error.response?.data,
-                );
+                console.error("Backend validation error:", error.response?.data);
             } else {
                 console.error(error);
             }

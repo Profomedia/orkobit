@@ -1,6 +1,6 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import {useMutation, useQueryClient} from "@tanstack/react-query";
 
-import { createHabit } from "../services/createHabit";
+import {createHabit} from "../services/createHabit";
 
 export function useCreateHabit() {
     const queryClient = useQueryClient();

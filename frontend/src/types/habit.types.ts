@@ -1,10 +1,4 @@
-export type HabitType =
-    | "checkbox"
-    | "number"
-    | "timer"
-    | "boolean"
-    | "rating"
-    | "streak";
+export type HabitType = "checkbox" | "number" | "timer" | "boolean" | "rating" | "streak";
 
 export interface Habit {
     id: number;

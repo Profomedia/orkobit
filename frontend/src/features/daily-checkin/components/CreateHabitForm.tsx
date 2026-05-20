@@ -1,20 +1,10 @@
-import {
-  useForm,
-} from "react-hook-form";
+import {useForm} from "react-hook-form";
 
-import {
-  zodResolver,
-} from "@hookform/resolvers/zod";
+import {zodResolver} from "@hookform/resolvers/zod";
 
-import {
-  useCreateHabit,
-} from "../hooks/useCreateHabit";
+import {useCreateHabit} from "../hooks/useCreateHabit";
 
-import {
-  CreateHabitFormValues,
-  createHabitSchema,
-} from "@/features/habits/schema/createHabitSchema";
-
+import {CreateHabitFormValues, createHabitSchema} from "@/features/habits/schema/createHabitSchema";
 
 const INPUT_STYLES = `
   w-full
@@ -29,199 +19,110 @@ const INPUT_STYLES = `
   focus:border-zinc-600
 `;
 
-
 export default function CreateHabitForm() {
+    const mutation = useCreateHabit();
 
-  const mutation =
-    useCreateHabit();
+    const {
+        register,
+        handleSubmit,
+        watch,
+        reset,
 
-  const {
-    register,
-    handleSubmit,
-    watch,
-    reset,
+        formState: {errors},
+    } = useForm<CreateHabitFormValues>({
+        resolver: zodResolver(createHabitSchema),
 
-    formState: {
-      errors,
-    },
+        defaultValues: {
+            name: "",
+            description: "",
+            color: "#22c55e",
+            habit_type: "boolean",
+            target_value: 1,
+        },
+    });
 
-  } = useForm<CreateHabitFormValues>({
-    resolver: zodResolver(
-      createHabitSchema,
-    ),
+    const selectedType = watch("habit_type");
 
-    defaultValues: {
-      name: "",
-      description: "",
-      color: "#22c55e",
-      habit_type: "boolean",
-      target_value: 1,
-    },
-  });
+    async function onSubmit(values: CreateHabitFormValues) {
+        try {
+            await mutation.mutateAsync(values);
 
-
-  const selectedType =
-    watch("habit_type");
-
-
-  async function onSubmit(
-    values: CreateHabitFormValues,
-  ) {
-
-    try {
-
-      await mutation.mutateAsync(
-        values,
-      );
-
-      reset();
-
-    } catch (error) {
-
-      console.error(
-        "Failed to create habit",
-        error,
-      );
+            reset();
+        } catch (error) {
+            console.error("Failed to create habit", error);
+        }
     }
-  }
 
+    return (
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+            {/* ---------------------- */}
+            {/* Name */}
+            {/* ---------------------- */}
 
-  return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="space-y-5"
-    >
+            <div className="space-y-1">
+                <input {...register("name")} placeholder="Workout" className={INPUT_STYLES} />
 
-      {/* ---------------------- */}
-      {/* Name */}
-      {/* ---------------------- */}
+                {errors.name && <p className="text-sm text-red-400">{errors.name.message}</p>}
+            </div>
 
-      <div className="space-y-1">
+            {/* ---------------------- */}
+            {/* Description */}
+            {/* ---------------------- */}
 
-        <input
-          {...register("name")}
-          placeholder="Workout"
-          className={INPUT_STYLES}
-        />
+            <div className="space-y-1">
+                <textarea {...register("description")} placeholder="Optional description" rows={4} className={INPUT_STYLES} />
 
-        {errors.name && (
-          <p className="text-sm text-red-400">
-            {errors.name.message}
-          </p>
-        )}
+                {errors.description && <p className="text-sm text-red-400">{errors.description.message}</p>}
+            </div>
 
-      </div>
+            {/* ---------------------- */}
+            {/* Habit Type */}
+            {/* ---------------------- */}
 
+            <div className="space-y-1">
+                <select {...register("habit_type")} className={INPUT_STYLES}>
+                    <option value="boolean">Checkbox</option>
 
-      {/* ---------------------- */}
-      {/* Description */}
-      {/* ---------------------- */}
+                    <option value="number">Number</option>
 
-      <div className="space-y-1">
+                    <option value="timer">Timer</option>
 
-        <textarea
-          {...register("description")}
-          placeholder="Optional description"
-          rows={4}
-          className={INPUT_STYLES}
-        />
+                    <option value="rating">Rating</option>
+                </select>
 
-        {errors.description && (
-          <p className="text-sm text-red-400">
-            {errors.description.message}
-          </p>
-        )}
+                {errors.habit_type && <p className="text-sm text-red-400">{errors.habit_type.message}</p>}
+            </div>
 
-      </div>
+            {/* ---------------------- */}
+            {/* Target Value */}
+            {/* ---------------------- */}
 
+            {selectedType !== "boolean" && (
+                <div className="space-y-1">
+                    <input
+                        type="number"
+                        step="0.01"
+                        {...register("target_value", {
+                            valueAsNumber: true,
+                        })}
+                        placeholder={
+                            selectedType === "timer" ? "Target seconds" : selectedType === "rating" ? "Target rating" : "Target value"
+                        }
+                        className={INPUT_STYLES}
+                    />
 
-      {/* ---------------------- */}
-      {/* Habit Type */}
-      {/* ---------------------- */}
-
-      <div className="space-y-1">
-
-        <select
-          {...register("habit_type")}
-          className={INPUT_STYLES}
-        >
-
-          <option value="boolean">
-            Checkbox
-          </option>
-
-          <option value="number">
-            Number
-          </option>
-
-          <option value="timer">
-            Timer
-          </option>
-
-          <option value="rating">
-            Rating
-          </option>
-
-        </select>
-
-        {errors.habit_type && (
-          <p className="text-sm text-red-400">
-            {errors.habit_type.message}
-          </p>
-        )}
-
-      </div>
-
-
-      {/* ---------------------- */}
-      {/* Target Value */}
-      {/* ---------------------- */}
-
-      {selectedType !== "boolean" && (
-
-        <div className="space-y-1">
-
-          <input
-            type="number"
-            step="0.01"
-
-            {...register(
-              "target_value",
-              {
-                valueAsNumber: true,
-              },
+                    {errors.target_value && <p className="text-sm text-red-400">{errors.target_value.message}</p>}
+                </div>
             )}
 
-            placeholder={
-              selectedType === "timer"
-                ? "Target seconds"
-                : selectedType === "rating"
-                  ? "Target rating"
-                  : "Target value"
-            }
+            {/* ---------------------- */}
+            {/* Submit */}
+            {/* ---------------------- */}
 
-            className={INPUT_STYLES}
-          />
-
-          {errors.target_value && (
-            <p className="text-sm text-red-400">
-              {errors.target_value.message}
-            </p>
-          )}
-
-        </div>
-
-      )}
-
-
-      {/* ---------------------- */}
-      {/* Submit */}
-      {/* ---------------------- */}
-
-      <button
-        type="submit"
-        disabled={mutation.isPending}
-        className="
+            <button
+                type="submit"
+                disabled={mutation.isPending}
+                className="
           w-full
           rounded-xl
           bg-white
@@ -234,14 +135,9 @@ export default function CreateHabitForm() {
           disabled:cursor-not-allowed
           disabled:opacity-50
         "
-      >
-
-        {mutation.isPending
-          ? "Creating..."
-          : "Create Habit"}
-
-      </button>
-
-    </form>
-  );
+            >
+                {mutation.isPending ? "Creating..." : "Create Habit"}
+            </button>
+        </form>
+    );
 }

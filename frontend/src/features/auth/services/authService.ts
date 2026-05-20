@@ -1,6 +1,6 @@
 import api from "@/lib/api";
 
-import { LOGIN_URL, REGISTER_URL } from "@/constants/api";
+import {LOGIN_URL, REGISTER_URL} from "@/constants/api";
 
 // --------------------------------------------------
 // TYPES

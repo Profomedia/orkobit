@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
+import {useEffect, useState} from "react";
 
 import api from "@/lib/api";
 
-import { USER_URL } from "@/constants/api";
+import {USER_URL} from "@/constants/api";
 
 // --------------------------------------------------
 // TYPES

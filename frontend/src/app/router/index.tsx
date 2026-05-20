@@ -1,7 +1,4 @@
-import {
-  Routes,
-  Route,
-} from "react-router-dom";
+import {Routes, Route} from "react-router-dom";
 
 import HomePage from "@/features/dashboard/pages/HomePage";
 import HabitPage from "@/features/habits/pages/HabitPage";
@@ -19,82 +16,65 @@ import TodayPage from "@/features/daily-checkin/pages/TodayPage";
 import CreateHabitPage from "@/features/dashboard/pages/CreateHabitPage";
 
 export default function AppRouter() {
+    return (
+        <Routes>
+            {/* Protected Routes */}
 
-  return (
+            <Route
+                path="/"
+                element={
+                    <ProtectedRoute>
+                        <HomePage />
+                    </ProtectedRoute>
+                }
+            />
 
-      <Routes>
+            <Route
+                path="/habit"
+                element={
+                    <ProtectedRoute>
+                        <HabitPage />
+                    </ProtectedRoute>
+                }
+            />
 
-        {/* Protected Routes */}
+            <Route
+                path="/habit/new"
+                element={
+                    <ProtectedRoute>
+                        <CreateHabitPage />
+                    </ProtectedRoute>
+                }
+            />
+            <Route
+                path="/today"
+                element={
+                    <ProtectedRoute>
+                        <TodayPage />
+                    </ProtectedRoute>
+                }
+            />
 
-        <Route
-          path="/"
-          element={
-            <ProtectedRoute>
-              <HomePage />
-            </ProtectedRoute>
-          }
-        />
+            <Route
+                path="/habits/:uuid"
+                element={
+                    <ProtectedRoute>
+                        <HabitDetailPage />
+                    </ProtectedRoute>
+                }
+            />
 
-        <Route
-          path="/habit"
-          element={
-            <ProtectedRoute>
-              <HabitPage />
-            </ProtectedRoute>
-          }
-        />
+            {/* Public Routes */}
 
-        <Route
-          path="/habit/new"
-          element={
-            <ProtectedRoute>
-              <CreateHabitPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/today"
-          element={
-            <ProtectedRoute>
-              <TodayPage />
-            </ProtectedRoute>
-          }
-        />
+            <Route path="/login" element={<LoginPage />} />
 
-      <Route
-        path="/habits/:uuid"
-        element={
-          <ProtectedRoute>
-            <HabitDetailPage />
-          </ProtectedRoute>
-        }
-      />
+            <Route path="/register" element={<RegisterPage />} />
 
-        {/* Public Routes */}
+            <Route path="/logout" element={<LogoutPage />} />
 
-        <Route
-          path="/login"
-          element={<LoginPage />}
-        />
+            {/* 404 */}
 
-        <Route
-          path="/register"
-          element={<RegisterPage />}
-        />
-
-        <Route
-          path="/logout"
-          element={<LogoutPage />}
-        />
-
-        {/* 404 */}
-
-        <Route
-          path="*"
-          element={<NotFoundPage />}
-        />
-
-      </Routes>
-
-  );
+            <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+    );
 }

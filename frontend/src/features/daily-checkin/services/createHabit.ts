@@ -1,7 +1,5 @@
-
-
 import api from "@/lib/api";
-import { CreateHabitDto, Habit } from "../types/habit";
+import {CreateHabitDto, Habit} from "../types/habit";
 
 export async function createHabit(data: CreateHabitDto): Promise<Habit> {
     console.log("API PAYLOAD:", data);

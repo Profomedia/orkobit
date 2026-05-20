@@ -1,77 +1,69 @@
-import { Navigate } from "react-router-dom";
+import {Navigate} from "react-router-dom";
 
-import {
-  REFRESH_TOKEN,
-  ACCESS_TOKEN,
-  REFRESH_URL,
-} from "../../endpoints/constants";
-import { useEffect, useState } from "react";
-import { jwtDecode } from "jwt-decode";
+import {REFRESH_TOKEN, ACCESS_TOKEN, REFRESH_URL} from "../../endpoints/constants";
+import {useEffect, useState} from "react";
+import {jwtDecode} from "jwt-decode";
 import api from "../../services/api";
 
-const ProtectedRoute = ({ children }) => {
-  const [isAuthorized, setIsAuthorized] = useState(null);
+const ProtectedRoute = ({children}) => {
+    const [isAuthorized, setIsAuthorized] = useState(null);
 
-  useEffect(() => {
-    const auth = async () => {
-      const token = localStorage.getItem(ACCESS_TOKEN);
-      if (!token) {
-        setIsAuthorized(false);
-        return;
-      }
+    useEffect(() => {
+        const auth = async () => {
+            const token = localStorage.getItem(ACCESS_TOKEN);
+            if (!token) {
+                setIsAuthorized(false);
+                return;
+            }
 
-      try {
-        const decoded = jwtDecode(token);
-        const tokenExpiration = decoded.exp;
-        const now = Date.now() / 1000;
+            try {
+                const decoded = jwtDecode(token);
+                const tokenExpiration = decoded.exp;
+                const now = Date.now() / 1000;
 
-        if (tokenExpiration < now) {
-          await refreshToken();
-        } else {
-          setIsAuthorized(true);
-        }
-      } catch (err) {
-        console.warn("Invalid token, logging out.");
-        setIsAuthorized(false);
-      }
-    };
+                if (tokenExpiration < now) {
+                    await refreshToken();
+                } else {
+                    setIsAuthorized(true);
+                }
+            } catch (err) {
+                console.warn("Invalid token, logging out.");
+                setIsAuthorized(false);
+            }
+        };
 
-    const refreshToken = async () => {
-      const refreshToken = localStorage.getItem(REFRESH_TOKEN);
-      if (!refreshToken) {
-        setIsAuthorized(false);
-        return;
-      }
+        const refreshToken = async () => {
+            const refreshToken = localStorage.getItem(REFRESH_TOKEN);
+            if (!refreshToken) {
+                setIsAuthorized(false);
+                return;
+            }
 
-      try {
-        const res = await api.post(REFRESH_URL, {
-          refresh: refreshToken,
-        });
+            try {
+                const res = await api.post(REFRESH_URL, {
+                    refresh: refreshToken,
+                });
 
-        if (res.status === 200) {
-          localStorage.setItem(ACCESS_TOKEN, res.data.access);
-          setIsAuthorized(true);
-        } else {
-          setIsAuthorized(false);
-        }
-      } catch (error) {
-        console.error("Token refresh failed:", error);
-        setIsAuthorized(false);
-      }
-    };
+                if (res.status === 200) {
+                    localStorage.setItem(ACCESS_TOKEN, res.data.access);
+                    setIsAuthorized(true);
+                } else {
+                    setIsAuthorized(false);
+                }
+            } catch (error) {
+                console.error("Token refresh failed:", error);
+                setIsAuthorized(false);
+            }
+        };
 
-    auth();
-  }, []);
+        auth();
+    }, []);
 
-  if (isAuthorized === null) {
-    return (
-      <div style={{ textAlign: "center", marginTop: "20%" }}>
-        🔐 Verifying access...
-      </div>
-    );
-  }
+    if (isAuthorized === null) {
+        return <div style={{textAlign: "center", marginTop: "20%"}}>🔐 Verifying access...</div>;
+    }
 
-  return isAuthorized ? children : <Navigate to="/login" />;
+    return isAuthorized ? children : <Navigate to="/login" />;
 };
 
 export default ProtectedRoute;

@@ -1,142 +1,105 @@
 import clsx from "clsx";
 
-
 // --------------------------------------------------
 // TYPES
 // --------------------------------------------------
 
-type ButtonVariant =
-  | "primary"
-  | "secondary"
-  | "ghost"
-  | "danger"
-  | "form-auth";
+type ButtonVariant = "primary" | "secondary" | "ghost" | "danger" | "form-auth";
 
-type ButtonSize =
-  | "sm"
-  | "md"
-  | "lg";
+type ButtonSize = "sm" | "md" | "lg";
 
-interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+    children: React.ReactNode;
 
-  children: React.ReactNode;
+    variant?: ButtonVariant;
 
-  variant?: ButtonVariant;
+    size?: ButtonSize;
 
-  size?: ButtonSize;
+    isLoading?: boolean;
 
-  isLoading?: boolean;
-
-  fullWidth?: boolean;
+    fullWidth?: boolean;
 }
-
 
 // --------------------------------------------------
 // STYLES
 // --------------------------------------------------
 
-const variantStyles: Record<
-  ButtonVariant,
-  string
-> = {
+const variantStyles: Record<ButtonVariant, string> = {
+    primary: "bg-primary text-black hover:opacity-90",
 
-  primary:
-    "bg-primary text-black hover:opacity-90",
+    secondary: "bg-zinc-800 text-white hover:bg-zinc-700",
 
-  secondary:
-    "bg-zinc-800 text-white hover:bg-zinc-700",
+    ghost: "bg-transparent text-white hover:bg-zinc-800",
 
-  ghost:
-    "bg-transparent text-white hover:bg-zinc-800",
+    danger: "bg-red-500 text-white hover:bg-red-400",
 
-  danger:
-    "bg-red-500 text-white hover:bg-red-400",
-
-  "form-auth":
-    "bg-primary text-black hover:opacity-90",
+    "form-auth": "bg-primary text-black hover:opacity-90",
 };
 
-const sizeStyles: Record<
-  ButtonSize,
-  string
-> = {
+const sizeStyles: Record<ButtonSize, string> = {
+    sm: "px-3 py-2 text-sm",
 
-  sm:
-    "px-3 py-2 text-sm",
+    md: "px-4 py-3 text-base",
 
-  md:
-    "px-4 py-3 text-base",
-
-  lg:
-    "px-5 py-4 text-lg",
+    lg: "px-5 py-4 text-lg",
 };
-
 
 // --------------------------------------------------
 // COMPONENT
 // --------------------------------------------------
 
 export default function Button({
-  children,
+    children,
 
-  variant = "primary",
+    variant = "primary",
 
-  size = "md",
+    size = "md",
 
-  isLoading = false,
+    isLoading = false,
 
-  fullWidth = false,
+    fullWidth = false,
 
-  className,
+    className,
 
-  disabled,
+    disabled,
 
-  ...props
+    ...props
 }: ButtonProps) {
+    return (
+        <button
+            className={clsx(
+                // Base
 
-  return (
-    <button
-      className={clsx(
+                "rounded-xl font-semibold transition duration-200",
 
-        // Base
+                "disabled:opacity-50 disabled:cursor-not-allowed",
 
-        "rounded-xl font-semibold transition duration-200",
+                "flex flex-col items-center justify-center gap-2",
 
-        "disabled:opacity-50 disabled:cursor-not-allowed",
+                // Variant
 
-        "flex flex-col items-center justify-center gap-2",
+                variantStyles[variant],
 
-        // Variant
+                // Size
 
-        variantStyles[variant],
+                sizeStyles[size],
 
-        // Size
+                // Width
 
-        sizeStyles[size],
+                fullWidth && "w-full",
 
-        // Width
+                // External styles
 
-        fullWidth && "w-full",
+                className,
+            )}
+            disabled={disabled || isLoading}
+            {...props}
+        >
+            {/* Loading State */}
 
-        // External styles
-
-        className
-      )}
-
-      disabled={
-        disabled || isLoading
-      }
-
-      {...props}
-    >
-
-      {/* Loading State */}
-
-      {isLoading && (
-
-        <div
-          className="
+            {isLoading && (
+                <div
+                    className="
                         h-4 w-4
                         rounded-full
                         border-2
@@ -145,15 +108,12 @@ export default function Button({
                         animate-spin
                         
                     "
-        />
-      )}
+                />
+            )}
 
-      {/* Content */}
+            {/* Content */}
 
-      <span className="flex items-center justify-center gap-2">
-        {children}
-      </span>
-
-    </button>
-  );
+            <span className="flex items-center justify-center gap-2">{children}</span>
+        </button>
+    );
 }

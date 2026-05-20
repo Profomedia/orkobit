@@ -34,12 +34,8 @@ export interface HabitEntryResponse {
     updated_at: string;
 }
 
-
 export async function saveHabitEntry(payload: SaveHabitEntryPayload) {
-    const response = await api.post<HabitEntryResponse>(
-        "/habit-entries/",
-        payload,
-    );
+    const response = await api.post<HabitEntryResponse>("/habit-entries/", payload);
 
     return response.data;
 }

@@ -1,10 +1,4 @@
-import {
-    Bell,
-    Info,
-    LogOut,
-    Settings,
-} from "lucide-react";
-
+import {Bell, Info, LogOut, Settings} from "lucide-react";
 
 // --------------------------------------------------
 // TYPES
@@ -20,13 +14,11 @@ export interface MenuItem {
     isAction?: boolean;
 }
 
-
 // --------------------------------------------------
 // MENU ITEMS
 // --------------------------------------------------
 
 export const MENU_ITEMS: MenuItem[] = [
-
     {
         label: "Notifications",
 

@@ -1,43 +1,31 @@
-import { Habit, HabitType } from "@/features/daily-checkin/types/daily-checkin.types";
-import {
-  Check,
-  Clock3,
-  Hash,
-  Star,
-  ToggleLeft,
-} from "lucide-react";
+import {Habit, HabitType} from "@/features/daily-checkin/types/daily-checkin.types";
+import {Check, Clock3, Hash, Star, ToggleLeft} from "lucide-react";
 
-import { useNavigate } from "react-router-dom";
-
-
+import {useNavigate} from "react-router-dom";
 
 interface HabitCardProps {
-  habit: Habit;
+    habit: Habit;
 }
 
 const habitTypeIcons: Record<HabitType, React.ReactNode> = {
- 
-  number: <Hash className="h-4 w-4" />,
+    number: <Hash className="h-4 w-4" />,
 
-  timer: <Clock3 className="h-4 w-4" />,
+    timer: <Clock3 className="h-4 w-4" />,
 
-  boolean: <ToggleLeft className="h-4 w-4" />,
+    boolean: <ToggleLeft className="h-4 w-4" />,
 };
 
-export default function HabitCard({
-  habit,
-}: HabitCardProps) {
+export default function HabitCard({habit}: HabitCardProps) {
+    const navigate = useNavigate();
 
-  const navigate = useNavigate();
+    function handleNavigate() {
+        navigate(`/habits/${habit.id}`);
+    }
 
-  function handleNavigate() {
-    navigate(`/habits/${habit.id}`);
-  }
-
-  return (
-    <article
-      onClick={handleNavigate}
-      className="
+    return (
+        <article
+            onClick={handleNavigate}
+            className="
         group relative cursor-pointer
         overflow-hidden rounded-3xl
         border border-zinc-800
@@ -47,141 +35,123 @@ export default function HabitCard({
         hover:border-zinc-700
         hover:shadow-2xl hover:shadow-black/20
       "
-    >
-
-      {/* Top Accent */}
-
-      <div
-        className="absolute inset-x-0 top-0 h-1"
-        style={{
-          backgroundColor: habit.color,
-        }}
-      />
-
-      {/* Header */}
-
-      <div className="flex items-start justify-between gap-4">
-
-        <div className="min-w-0 flex-1">
-
-          <div className="flex items-center gap-3">
-
-            {/* Icon */}
+        >
+            {/* Top Accent */}
 
             <div
-              className="
+                className="absolute inset-x-0 top-0 h-1"
+                style={{
+                    backgroundColor: habit.color,
+                }}
+            />
+
+            {/* Header */}
+
+            <div className="flex items-start justify-between gap-4">
+                <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-3">
+                        {/* Icon */}
+
+                        <div
+                            className="
                 flex h-10 w-10 items-center
                 justify-center rounded-2xl
                 border bg-zinc-900 text-zinc-300
               "
-              style={{
-                borderColor: habit.color,
-                backgroundColor: `${habit.color}15`,
-              }}
-            >
-              {habitTypeIcons[habit.habit_type]}
-            </div>
+                            style={{
+                                borderColor: habit.color,
+                                backgroundColor: `${habit.color}15`,
+                            }}
+                        >
+                            {habitTypeIcons[habit.habit_type]}
+                        </div>
 
-            {/* Title */}
+                        {/* Title */}
 
-            <div className="min-w-0">
-
-              <h2
-                className="
+                        <div className="min-w-0">
+                            <h2
+                                className="
                   truncate text-lg font-semibold
                   tracking-tight text-white
                 "
-              >
-                {habit.name}
-              </h2>
+                            >
+                                {habit.name}
+                            </h2>
 
-              <div
-                className="
+                            <div
+                                className="
                   mt-1 inline-flex items-center
                   rounded-full border border-zinc-800
                   bg-zinc-900 px-2.5 py-1
                   text-xs font-medium capitalize
                   text-zinc-400
                 "
-              >
-                {habit.habit_type}
-              </div>
+                            >
+                                {habit.habit_type}
+                            </div>
+                        </div>
+                    </div>
 
-            </div>
+                    {/* Description */}
 
-          </div>
-
-          {/* Description */}
-
-          <p
-            className="
+                    <p
+                        className="
               mt-4 line-clamp-2 text-sm
               leading-relaxed text-zinc-400
             "
-          >
-            {habit.description || "No description provided."}
-          </p>
+                    >
+                        {habit.description || "No description provided."}
+                    </p>
+                </div>
 
-        </div>
+                {/* Color Dot */}
 
-        {/* Color Dot */}
-
-        <div
-          className="
+                <div
+                    className="
             mt-1 h-3 w-3 rounded-full
             ring-4 ring-zinc-950
           "
-          style={{
-            backgroundColor: habit.color,
-          }}
-        />
+                    style={{
+                        backgroundColor: habit.color,
+                    }}
+                />
+            </div>
 
-      </div>
+            {/* Footer */}
 
-      {/* Footer */}
-
-      <div
-        className="
+            <div
+                className="
           mt-6 flex items-center
           justify-between border-t
           border-zinc-800 pt-4
         "
-      >
+            >
+                {/* Target */}
 
-        {/* Target */}
+                <div className="flex items-center gap-2 text-sm text-zinc-500">
+                    <span>Target:</span>
 
-        <div className="flex items-center gap-2 text-sm text-zinc-500">
+                    <span className="font-medium text-zinc-300">
+                        {habit.target_value}
 
-          <span>
-            Target:
-          </span>
+                        {habit.unit && ` ${habit.unit}`}
+                    </span>
+                </div>
 
-          <span className="font-medium text-zinc-300">
+                {/* CTA */}
 
-            {habit.target_value}
-
-            {habit.unit && ` ${habit.unit}`}
-
-          </span>
-
-        </div>
-
-        {/* CTA */}
-
-        <div
-          className="
+                <div
+                    className="
             rounded-2xl bg-white px-4 py-2
             text-sm font-semibold text-zinc-950
             transition-all duration-200
             group-hover:scale-[1.03]
             group-hover:bg-zinc-200
           "
-        >
-          Open
-        </div>
-
-      </div>
-
-    </article>
-  );
+                >
+                    Open
+                </div>
+            </div>
+        </article>
+    );
 }
