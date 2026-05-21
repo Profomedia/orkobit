@@ -1,17 +1,23 @@
-import {useMemo} from "react";
+// import {useMemo,} from "react";
 
-import HabitRow from "../components/HabitRow";
+import { useHabits } from "@/hooks/useHabits";
+import type { Habit } from "../types/habit";
+import { useDailyCheckinStore } from "../store/dailyCheckin.store";
+import { useMemo } from "react";
+import HabitInputRenderer from "../components/HabitInputRenderer";
 
-import type {Habit} from "@/types/habit.types";
+// import {useHabits,} from "../../hooks/useHabits";
 
-import {useHabits} from "@/hooks/useHabits";
+// import HabitInputRenderer from "../../features/today/components/HabitInputRenderer";
 
-import {useDailyCheckinStore} from "../store/dailyCheckin.store";
-import {useHandleHabitValueChange} from "../hooks/useHandleHabitValueChange";
+// import {useDailyCheckinStore,} from "../../store/daily-checkin-store";
 
-type HabitValue = boolean | number;
+// import type {Habit,} from "../../types/habit";
 
-function getDefaultValue(habitType: Habit["habit_type"]): HabitValue {
+function getDefaultValue(
+    habitType: Habit["habit_type"],
+): boolean | number {
+
     switch (habitType) {
         case "boolean":
             return false;
@@ -28,115 +34,97 @@ function getDefaultValue(habitType: Habit["habit_type"]): HabitValue {
 }
 
 export default function TodayPage() {
-    const {data: habits = [], isLoading, isError} = useHabits();
-    const {values, setValue} = useDailyCheckinStore();
-    const {handleHabitValueChange} = useHandleHabitValueChange();
 
-    console.log(values);
-    /**
-     * Initialize missing habit values
-     */
-    useMemo(() => {
-        habits.forEach((habit) => {
-            const habitId = String(habit.id);
+    const {
+        data: habits = [],
+        isLoading,
+        isError,
+    } = useHabits();
 
-            if (values[habitId] === undefined) {
-                setValue(habitId, getDefaultValue(habit.habit_type));
+    const getValue = useDailyCheckinStore(
+        (state) => state.getValue,
+    );
+
+    const completedHabits = useMemo(() => {
+        return habits.filter((habit) => {
+
+            const value = getValue(
+                String(habit.id),
+                getDefaultValue(habit.habit_type),
+            );
+
+            if (typeof value === "boolean") {
+                return value;
             }
-        });
-    }, [habits, values, setValue]);
 
-    const completedHabits = Object.values(values).filter((value) => {
-        if (typeof value === "boolean") {
-            return value === true;
-        }
+            return value > 0;
 
-        return value > 0;
-    }).length;
-
-    const completionPercentage = habits.length > 0 ? Math.round((completedHabits / habits.length) * 100) : 0;
+        }).length;
+    }, [habits, getValue]);
 
     if (isLoading) {
         return (
-            <main className="flex min-h-screen items-center justify-center bg-bg p-4">
-                <div className="text-zinc-400">Loading habits...</div>
+            <main className="flex min-h-screen items-center justify-center">
+                <p>Loading habits...</p>
             </main>
         );
     }
 
     if (isError) {
         return (
-            <main className="flex min-h-screen items-center justify-center bg-bg p-4">
-                <div className="text-red-400">Failed to load habits.</div>
+            <main className="flex min-h-screen items-center justify-center">
+                <p>Failed to load habits.</p>
             </main>
         );
     }
 
     return (
-        <main className="min-h-screen bg-bg">
-            <div className="mx-auto flex w-full max-w-4xl flex-col gap-8 px-4 py-8">
-                {/* HEADER */}
-                <section className="flex flex-col gap-4">
-                    <div>
-                        <h1 className="text-4xl font-bold tracking-tight text-txt">Today</h1>
+        <main className="mx-auto flex w-full max-w-3xl flex-col gap-4 px-4 py-6">
 
-                        <p className="mt-2 text-zinc-400">Complete your daily check-in.</p>
-                    </div>
+            <section className="flex items-center justify-between">
+                <div>
+                    <h1 className="text-2xl font-bold">
+                        Today
+                    </h1>
 
-                    {/* STATS */}
-                    <div className="flex flex-col gap-3 rounded-3xl border border-zinc-800 bg-zinc-950 p-5">
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <p className="text-sm text-zinc-400">Progress</p>
+                    <p className="text-sm text-zinc-500">
+                        {completedHabits} / {habits.length} completed
+                    </p>
+                </div>
+            </section>
 
-                                <h2 className="mt-1 text-2xl font-bold text-txt">
-                                    {completedHabits}/{habits.length}
+            <section className="flex flex-col gap-3">
+                {habits.map((habit) => {
+
+                    const habitId = String(habit.id);
+
+                    return (
+                        <article
+                            className="flex items-center justify-between rounded-2xl border p-4"
+                            key={habit.id}
+                        >
+
+                            <div className="flex flex-col">
+                                <h2 className="font-medium">
+                                    {habit.name}
                                 </h2>
+
+                                <p className="text-sm capitalize text-zinc-500">
+                                    {habit.habit_type}
+                                </p>
                             </div>
 
-                            <div className="text-right">
-                                <p className="text-sm text-zinc-400">Completion</p>
-
-                                <h2 className="mt-1 text-2xl font-bold text-emerald-400">{completionPercentage}%</h2>
-                            </div>
-                        </div>
-
-                        {/* PROGRESS BAR */}
-                        <div className="h-3 overflow-hidden rounded-full bg-zinc-800">
-                            <div
-                                className="h-full rounded-full bg-emerald-500 transition-all duration-500"
-                                style={{
-                                    width: `${completionPercentage}%`,
-                                }}
+                            <HabitInputRenderer
+                                habit={habit}
+                                value={getValue(
+                                    habitId,
+                                    getDefaultValue(habit.habit_type),
+                                )}
                             />
-                        </div>
-                    </div>
-                </section>
-
-                {/* HABITS */}
-                <section className="flex flex-col gap-4">
-                    {habits.length === 0 ? (
-                        <div className="rounded-3xl border border-zinc-800 bg-zinc-950 p-10 text-center">
-                            <h2 className="text-lg font-semibold text-txt">No habits yet</h2>
-
-                            <p className="mt-2 text-sm text-zinc-400">Create habits to start tracking your consistency.</p>
-                        </div>
-                    ) : (
-                        habits.map((habit) => {
-                            const habitId = String(habit.id);
-
-                            return (
-                                <HabitRow
-                                    key={habitId}
-                                    habit={habit}
-                                    value={values[habitId] ?? getDefaultValue(habit.habit_type)}
-                                    onChange={(value) => handleHabitValueChange(habit, value)}
-                                />
-                            );
-                        })
-                    )}
-                </section>
-            </div>
+                        </article>
+                    );
+                })}
+            </section>
         </main>
     );
 }
