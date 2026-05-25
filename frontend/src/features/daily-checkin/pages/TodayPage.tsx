@@ -1,24 +1,22 @@
-// import {useMemo,} from "react";
+import dayjs from "dayjs";
+import {useMemo,} from "react";
 
-import { useHabits } from "@/hooks/useHabits";
-import type { Habit } from "../types/habit";
-import { useDailyCheckinStore } from "../store/dailyCheckin.store";
-import { useMemo } from "react";
 import HabitInputRenderer from "../components/HabitInputRenderer";
 
-// import {useHabits,} from "../../hooks/useHabits";
+import {useHabits,} from "@/hooks/useHabits";
 
-// import HabitInputRenderer from "../../features/today/components/HabitInputRenderer";
+import {useDailyCheckinStore,} from "../store/dailyCheckin.store";
 
-// import {useDailyCheckinStore,} from "../../store/daily-checkin-store";
+import type {Habit,} from "../types/habit";
 
-// import type {Habit,} from "../../types/habit";
+import {getCurrentWeek,} from "../utils/getCurrentWeek";
 
 function getDefaultValue(
     habitType: Habit["habit_type"],
 ): boolean | number {
 
     switch (habitType) {
+
         case "boolean":
             return false;
 
@@ -45,7 +43,10 @@ export default function TodayPage() {
         (state) => state.getValue,
     );
 
+    const weekDays = getCurrentWeek();
+
     const completedHabits = useMemo(() => {
+
         return habits.filter((habit) => {
 
             const value = getValue(
@@ -60,6 +61,7 @@ export default function TodayPage() {
             return value > 0;
 
         }).length;
+
     }, [habits, getValue]);
 
     if (isLoading) {
@@ -79,52 +81,128 @@ export default function TodayPage() {
     }
 
     return (
-        <main className="mx-auto flex w-full max-w-3xl flex-col gap-4 px-4 py-6">
+        <main className="mx-auto mt-5 flex w-full max-w-7xl flex-col gap-4 px-4 py-6">
 
             <section className="flex items-center justify-between">
+
                 <div>
-                    <h1 className="text-2xl font-bold">
+                    <h1 className="text-3xl font-bold text-txt">
                         Today
                     </h1>
 
-                    <p className="text-sm text-zinc-500">
+                    <p className="text-sm text-lite">
                         {completedHabits} / {habits.length} completed
                     </p>
                 </div>
+
             </section>
 
-            <section className="flex flex-col gap-3">
-                {habits.map((habit) => {
+            <section className="rounded-2xl border border-zinc-800 bg-zinc-950 p-4">
 
-                    const habitId = String(habit.id);
+                <div>
+                    <h2 className="text-lg font-semibold text-txt">
+                        Weekly Progress
+                    </h2>
 
-                    return (
-                        <article
-                            className="flex items-center justify-between rounded-2xl border p-4"
-                            key={habit.id}
-                        >
+                    <p className="text-sm text-lite">
+                        Track consistency across the week
+                    </p>
+                </div>
 
-                            <div className="flex flex-col">
-                                <h2 className="font-medium">
+            </section>
+
+            <section className="flex flex-col gap-4">
+
+                {habits.map((habit) => (
+
+                    <article
+                        key={habit.id}
+                        className="rounded-2xl border border-zinc-800 bg-zinc-950 p-4"
+                    >
+
+                        <div className="mb-4 flex items-center justify-between">
+
+                            <div className="flex ">
+
+                                <h2 className="font-semibold text-txt">
                                     {habit.name}
                                 </h2>
-
-                                <p className="text-sm capitalize text-zinc-500">
-                                    {habit.habit_type}
-                                </p>
+                                <div className="flex">
+                                    <button>Prev</button>
+                                    <button>Next</button>
+                                </div>
                             </div>
 
-                            <HabitInputRenderer
-                                habit={habit}
-                                value={getValue(
-                                    habitId,
-                                    getDefaultValue(habit.habit_type),
-                                )}
-                            />
-                        </article>
-                    );
-                })}
+                        </div>
+
+                        {/* TODO scale the card when the mouse passes through */}
+                        <div className="
+                            flex gap-7 md:gap-8 md:justify-center pb-1 px-4 scrollbar-hide
+                            overflow-x-auto
+                            overflow-visible
+                            lg:grid lg:grid-cols-7 lg:overflow-visible
+                        ">
+
+                            {weekDays.map((day) => {
+
+                                const isToday = (
+                                    day.date
+                                    === dayjs().format("YYYY-MM-DD")
+                                );
+                                const isFuture = dayjs(day.date)
+                                    .startOf("day")
+                                    .isAfter(dayjs().startOf("day"));
+
+                                return (
+                                    <div
+                                        key={day.date}
+                                        className={[
+                                            "flex min-w-[88px] lg:min-w-0 flex-col items-center gap-3 rounded-2xl border p-3 transition-all duration-300 max-w-20",
+
+                                           isFuture
+                                        ? "pointer-events-none opacity-40 border-zinc-800 bg-zinc-950"
+                                        : isToday
+                                            ? "border-emerald-400 bg-emerald-500/10 shadow-[0_0_20px_rgba(52,211,153,0.35)]"
+                                            : "border-zinc-800 bg-bg"
+                                        ].join(" ")}
+                                    >
+
+                                        <div className="text-center flex gap-2">
+
+                                            <p className={[
+                                                "text-xs font-semibold text-txt",
+                                                
+                                                isToday
+                                                    ? "text-emerald-500 "
+                                                    : "text-lite",
+                                                ].join(" ")}
+                                            >
+                                                {dayjs(day.date).format("ddd")}
+                                            </p>
+
+                                            <p className="text-xs text-lite">
+                                                {dayjs(day.date).format("Do")}
+                                            </p>
+
+                                        </div>
+
+                                        <HabitInputRenderer
+                                            habit={habit}
+                                            date={day.date}
+                                            disabled={isFuture}
+                                        />
+                                        <div className="border-zinc-600 w-1/2 border-2 rounded-full"></div>
+                                    </div>
+                                );
+                            })}
+
+                        </div>
+
+                    </article>
+                ))}
+
             </section>
+
         </main>
     );
 }

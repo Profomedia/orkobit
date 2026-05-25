@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "./base/colors.css";
+@import "./base/reset.css";
 
 html,
 body,

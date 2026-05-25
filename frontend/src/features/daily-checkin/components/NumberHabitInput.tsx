@@ -1,20 +1,26 @@
-import dayjs from "dayjs";
+import {useEffect, useRef, useState,} from "react";
 
+import {useUpsertHabitEntry,} from "../hooks/useUpsertHabitEntry";
 import {useDailyCheckinStore,} from "../store/dailyCheckin.store";
-import { useUpsertHabitEntry } from "../hooks/useUpsertHabitEntry";
-
-
 
 interface NumberHabitInputProps {
     habitId: string;
+    date: string;
+    disabled?: boolean;
 }
 
 export default function NumberHabitInput({
     habitId,
+    date,
+    disabled = false
 }: NumberHabitInputProps) {
 
-    const value = useDailyCheckinStore(
-        (state) => state.getValue(habitId, 0) as number,
+    const storedValue = useDailyCheckinStore(
+        (state) => state.getValue(
+            date,
+            habitId,
+            0,
+        ) as number,
     );
 
     const setValue = useDailyCheckinStore(
@@ -23,42 +29,123 @@ export default function NumberHabitInput({
 
     const mutation = useUpsertHabitEntry();
 
-    const updateValue = (nextValue: number) => {
+    const [inputValue, setInputValue] = useState(
+        String(storedValue),
+    );
 
-        setValue(habitId, nextValue);
+    const timeoutRef = useRef<NodeJS.Timeout | null>(
+        null,
+    );
+
+    useEffect(() => {
+        setInputValue(String(storedValue));
+    }, [storedValue]);
+
+    const syncValue = (nextValue: number) => {
+
+        if (disabled) return
+        const safeValue = Math.max(0, nextValue);
+
+        setValue(
+            date,
+            habitId,
+            safeValue,
+        );
 
         mutation.mutate({
             habit: habitId,
-            value: nextValue,
+            value: safeValue,
             habitType: "number",
-            date: dayjs().format("YYYY-MM-DD"),
+            date,
         });
     };
 
+    const changeBy = (amount: number) => {
+        syncValue(storedValue + amount);
+    };
+
+    const startHold = (amount: number) => {
+
+        changeBy(amount);
+
+        timeoutRef.current = setInterval(() => {
+            changeBy(amount);
+        }, 120);
+    };
+
+    const stopHold = () => {
+
+        if (timeoutRef.current) {
+            clearInterval(timeoutRef.current);
+        }
+    };
+
     return (
-        <div className="flex items-center gap-3">
+        <div className="flex flex-col items-center gap-2">
 
-            <button
-                type="button"
-                onClick={() => updateValue(
-                    Math.max(0, value - 1),
-                )}
-                className="flex h-10 w-10 items-center justify-center rounded-xl border border-zinc-700 bg-zinc-900"
-            >
-                -
-            </button>
+            <div className="flex w-full">
 
-            <div className="min-w-[60px] text-center text-lg font-semibold">
-                {value}
+                <button
+                    type="button"
+                    onMouseDown={() => startHold(-10)}
+                    onMouseUp={stopHold}
+                    onMouseLeave={stopHold}
+                    disabled={disabled}
+                    className="rounded-xl border flex-1 border-zinc-700 bg-zinc-900 px-3 py-2 text-sm"
+                >
+                    -10
+                </button>
+
+                <button
+                    type="button"
+                    onMouseDown={() => startHold(-1)}
+                    onMouseUp={stopHold}
+                    onMouseLeave={stopHold}
+                    disabled={disabled}
+                    className="rounded-xl flex-1 border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm"
+                >
+                    -1
+                </button>
             </div>
 
-            <button
-                type="button"
-                onClick={() => updateValue(value + 1)}
-                className="flex h-10 w-10 items-center justify-center rounded-xl border border-zinc-700 bg-zinc-900"
-            >
-                +
-            </button>
+            <input
+                type="number"
+                min={0}
+                value={inputValue}
+                onChange={(event) => {
+                    setInputValue(event.target.value);
+                }}
+                onBlur={() => {
+                    syncValue(Number(inputValue) || 0);
+                }}
+                className="w-full rounded-xl border border-zinc-400 bg-zinc-900 px-3 py-2 text-center outline-none"
+            />
+
+            <div className="flex w-full">
+
+                <button
+                    type="button"
+                    onMouseDown={() => startHold(1)}
+                    onMouseUp={stopHold}
+                    onMouseLeave={stopHold}
+                    disabled={disabled}
+                    className="rounded-xl border flex-1 border-zinc-700 bg-zinc-900 px-3 py-2 text-sm"
+                >
+                    +1
+                </button>
+
+                <button
+                    type="button"
+                    onMouseDown={() => startHold(10)}
+                    onMouseUp={stopHold}
+                    onMouseLeave={stopHold}
+                    disabled={disabled}
+                    className="rounded-xl border flex-1 border-zinc-700 bg-zinc-900 px-3 py-2 text-sm"
+                >
+                    +10
+                </button>
+
+            </div>
 
         </div>
     );

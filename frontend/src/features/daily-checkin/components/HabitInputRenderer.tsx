@@ -6,10 +6,14 @@ import TimerHabitInput from "./TimerHabitInput";
 
 interface HabitInputRendererProps {
     habit: Habit;
+    date: string;
+    disabled?: boolean;
 }
 
 export default function HabitInputRenderer({
     habit,
+    date,
+    disabled = false,
 }: HabitInputRendererProps) {
 
     switch (habit.habit_type) {
@@ -18,6 +22,8 @@ export default function HabitInputRenderer({
             return (
                 <BooleanHabitInput
                     habitId={habit.id}
+                    date={date}
+                    disabled={disabled}
                 />
             );
 
@@ -25,6 +31,8 @@ export default function HabitInputRenderer({
             return (
                 <NumberHabitInput
                     habitId={habit.id}
+                    date={date}
+                    disabled={disabled}
                 />
             );
 
@@ -32,6 +40,8 @@ export default function HabitInputRenderer({
             return (
                 <TimerHabitInput
                     habitId={habit.id}
+                    date={date}
+                    disabled={disabled}
                 />
             );
 

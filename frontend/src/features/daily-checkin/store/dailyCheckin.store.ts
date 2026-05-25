@@ -1,6 +1,5 @@
 import {create,} from "zustand";
 import {persist,} from "zustand/middleware";
-import dayjs from "dayjs";
 
 type HabitValue = boolean | number;
 
@@ -12,19 +11,19 @@ interface DailyCheckinStore {
   removePendingSync: (id: string) => void;
 
   getValue: (
+    date: string,
     habitId: string,
     fallback?: HabitValue,
   ) => HabitValue;
 
   setValue: (
+    date: string,
     habitId: string,
     value: HabitValue,
   ) => void;
 
   clearDate: (date: string) => void;
 }
-
-const getToday = () => dayjs().format("YYYY-MM-DD");
 
 export const useDailyCheckinStore = create<DailyCheckinStore>()(
   persist(
@@ -46,24 +45,30 @@ export const useDailyCheckinStore = create<DailyCheckinStore>()(
           ),
         })),
 
-      getValue: (habitId, fallback = 0) => {
-        const today = getToday();
+      getValue: (
+        date,
+        habitId,
+        fallback = 0,
+      ) => {
 
         return (
-          get().values[today]?.[habitId]
+          get().values[date]?.[habitId]
           ?? fallback
         );
       },
 
-      setValue: (habitId, value) => {
-        const today = getToday();
+      setValue: (
+        date,
+        habitId,
+        value,
+      ) => {
 
         set((state) => ({
           values: {
             ...state.values,
 
-            [today]: {
-              ...state.values[today],
+            [date]: {
+              ...state.values[date],
               [habitId]: value,
             },
           },
