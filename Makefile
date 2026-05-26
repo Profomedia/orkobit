@@ -79,7 +79,7 @@ frontend-build:
 	cd frontend && npm run build
 
 lint:
-	cd frontend && npm run lint -- --write
+	ruff check backend --fix && cd frontend && npm run lint -- --write
 
 # --------------------------------------------------
 # WORKER

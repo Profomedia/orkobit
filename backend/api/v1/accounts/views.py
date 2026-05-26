@@ -2,7 +2,6 @@ from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from apps.accounts.serializers import UserRegistrationSerializer, UserSettingsSerializer, CombinedUserSerializer, UserProfileSerializer
 from django.contrib.auth.models import User
-from .views import *
 from apps.accounts.models import (
   user_settings,
   user_profile
