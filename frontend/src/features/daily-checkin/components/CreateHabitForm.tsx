@@ -4,7 +4,7 @@ import {zodResolver} from "@hookform/resolvers/zod";
 
 import {useCreateHabit} from "../hooks/useCreateHabit";
 
-import {CreateHabitFormValues, createHabitSchema} from "@/features/habits/schema/createHabitSchema";
+import {type CreateHabitFormValues, createHabitSchema} from "@/features/habits/schema/createHabitSchema";
 
 const INPUT_STYLES = `
   w-full

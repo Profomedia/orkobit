@@ -1,5 +1,4 @@
 import Button from "@/components/ui/Button";
-import {Plus} from "lucide-react";
 import {useNavigate} from "react-router-dom";
 
 export default function HabitHeader() {
@@ -14,6 +13,7 @@ export default function HabitHeader() {
 
             <div className="flex">
                 <Button
+                type="button"
                     onClick={() => navigate("/today")}
                     className="gap-2 self-start text-sm hover:border hover:border-zinc-500 text-txt cursor-pointer !bg-bg"
                 >

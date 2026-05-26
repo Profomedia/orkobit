@@ -129,8 +129,8 @@ export default function TodayPage() {
                                     {habit.name}
                                 </h2>
                                 <div className="flex">
-                                    <button>Prev</button>
-                                    <button>Next</button>
+                                    <button type="button">Prev</button>
+                                    <button type="button">Next</button>
                                 </div>
                             </div>
 

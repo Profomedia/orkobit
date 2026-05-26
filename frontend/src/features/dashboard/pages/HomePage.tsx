@@ -1,5 +1,3 @@
-import Header from "@/components/layout/Header";
-
 import EmptyState from "@/components/ui/EmptyState";
 
 import DashboardSummary from "../components/DashboardSummary";
@@ -7,10 +5,8 @@ import DashboardSummary from "../components/DashboardSummary";
 import {useNavigate} from "react-router-dom";
 import { useHabits } from "@/hooks/useHabits";
 
-interface HomePageProps {
-    streaks?: unknown[];
-}
-export default function HomePage({streaks = []}: HomePageProps) {
+
+export default function HomePage() {
     const {data:habits, isLoading, isError} = useHabits()
     
     const navigate = useNavigate();

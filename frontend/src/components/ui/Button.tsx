@@ -67,6 +67,7 @@ export default function Button({
 }: ButtonProps) {
     return (
         <button
+        type="button"
             className={clsx(
                 // Base
 

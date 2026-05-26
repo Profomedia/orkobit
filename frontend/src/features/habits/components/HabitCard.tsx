@@ -1,5 +1,5 @@
-import {Habit, HabitType} from "@/features/daily-checkin/types/daily-checkin.types";
-import {Check, Clock3, Hash, Star, ToggleLeft} from "lucide-react";
+import type {Habit, HabitType} from "@/features/daily-checkin/types/daily-checkin.types";
+import { Clock3, Hash, ToggleLeft} from "lucide-react";
 
 import {useNavigate} from "react-router-dom";
 
@@ -23,18 +23,19 @@ export default function HabitCard({habit}: HabitCardProps) {
     }
 
     return (
-        <article
+        <button
+        type="button"
             onClick={handleNavigate}
             className="
-        group relative cursor-pointer
-        overflow-hidden rounded-3xl
-        border border-zinc-800
-        bg-gradient-to-b from-zinc-900 to-zinc-950
-        p-5 transition-all duration-300
-        hover:-translate-y-1
-        hover:border-zinc-700
-        hover:shadow-2xl hover:shadow-black/20
-      "
+                group relative cursor-pointer
+                overflow-hidden rounded-3xl
+                border border-zinc-800
+                bg-gradient-to-b from-zinc-900 to-zinc-950
+                p-5 transition-all duration-300
+                hover:-translate-y-1
+                hover:border-zinc-700
+                hover:shadow-2xl hover:shadow-black/20
+            "
         >
             {/* Top Accent */}
 
@@ -152,6 +153,6 @@ export default function HabitCard({habit}: HabitCardProps) {
                     Open
                 </div>
             </div>
-        </article>
+        </button>
     );
 }

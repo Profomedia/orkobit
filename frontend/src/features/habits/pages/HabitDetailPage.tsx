@@ -5,11 +5,6 @@ import {useParams} from "react-router-dom";
 import {useHabitEntries} from "../../../hooks/useHabitEntries";
 import BackButton from "@/components/navigation/BackButton";
 
-interface CalendarDay {
-    date: string;
-
-    completed: boolean;
-}
 
 function generateYearCalendar(): string[] {
     const currentYear = new Date().getFullYear();

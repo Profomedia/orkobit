@@ -95,6 +95,7 @@ export default function EmptyState({onStart}: EmptyStateProps) {
 
             <div className="mt-10">
                 <Button
+                type="button"
                     onClick={onStart}
                     className="
                         w-20 h-20 !rounded-full

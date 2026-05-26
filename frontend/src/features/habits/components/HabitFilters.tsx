@@ -5,6 +5,7 @@ export default function HabitFilters() {
         <div className="flex flex-wrap items-center gap-2">
             {filters.map((filter) => (
                 <button
+                type="button"
                     key={filter}
                     className="
             rounded-xl border border-zinc-800

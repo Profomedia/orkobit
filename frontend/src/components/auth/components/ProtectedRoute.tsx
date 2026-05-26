@@ -26,7 +26,7 @@ const ProtectedRoute = ({children}) => {
                 } else {
                     setIsAuthorized(true);
                 }
-            } catch (err) {
+            } catch (_err) {
                 console.warn("Invalid token, logging out.");
                 setIsAuthorized(false);
             }

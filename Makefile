@@ -78,6 +78,9 @@ frontend-dev:
 frontend-build:
 	cd frontend && npm run build
 
+lint:
+	cd frontend && npm run lint -- --write
+
 # --------------------------------------------------
 # WORKER
 # --------------------------------------------------

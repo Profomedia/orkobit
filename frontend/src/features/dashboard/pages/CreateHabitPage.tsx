@@ -7,7 +7,9 @@ export default function CreateHabitPage() {
     return (
         <main className="min-h-screen bg-bg text-txt">
             <div className="mx-auto max-w-2xl px-6 py-10">
-                <button onClick={() => navigate(-1)} className="mb-6 text-sm opacity-70">
+                <button onClick={() => navigate(-1)} 
+                type="button"
+                className="mb-6 text-sm opacity-70">
                     ← Back
                 </button>
 
