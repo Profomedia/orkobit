@@ -14,55 +14,65 @@ import HabitDetailPage from "@/features/habits/pages/HabitDetailPage";
 
 import TodayPage from "@/features/daily-checkin/pages/TodayPage";
 import CreateHabitPage from "@/features/dashboard/pages/CreateHabitPage";
+import AppLayout from "@/layouts/AppLayout";
 
 export default function AppRouter() {
     return (
         <Routes>
             {/* Protected Routes */}
+            <Route
+                element={
+                    <ProtectedRoute>
+                        <AppLayout />
+                    </ProtectedRoute>
+                }
+            >
 
-            <Route
-                path="/"
-                element={
-                    <ProtectedRoute>
-                        <HomePage />
-                    </ProtectedRoute>
-                }
-            />
+                <Route
+                    path="/"
+                    element={
+                        <ProtectedRoute>
+                            <HomePage />
+                        </ProtectedRoute>
+                    }
+                />
 
-            <Route
-                path="/habit"
-                element={
-                    <ProtectedRoute>
-                        <HabitPage />
-                    </ProtectedRoute>
-                }
-            />
+                <Route
+                    path="/habit"
+                    element={
+                        <ProtectedRoute>
+                            <HabitPage />
+                        </ProtectedRoute>
+                    }
+                />
 
-            <Route
-                path="/habit/new"
-                element={
-                    <ProtectedRoute>
-                        <CreateHabitPage />
-                    </ProtectedRoute>
-                }
-            />
-            <Route
-                path="/today"
-                element={
-                    <ProtectedRoute>
-                        <TodayPage />
-                    </ProtectedRoute>
-                }
-            />
+                <Route
+                    path="/habit/new"
+                    element={
+                        <ProtectedRoute>
+                            <CreateHabitPage />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/today"
+                    element={
+                        <ProtectedRoute>
+                            <TodayPage />
+                        </ProtectedRoute>
+                    }
+                />
 
-            <Route
-                path="/habits/:uuid"
-                element={
-                    <ProtectedRoute>
-                        <HabitDetailPage />
-                    </ProtectedRoute>
-                }
-            />
+                <Route
+                    path="/habits/:uuid"
+                    element={
+                        <ProtectedRoute>
+                            <HabitDetailPage />
+                        </ProtectedRoute>
+                    }
+                />
+            </Route>
+
 
             {/* Public Routes */}
 

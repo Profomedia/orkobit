@@ -10,6 +10,7 @@ import {useDailyCheckinStore,} from "../store/dailyCheckin.store";
 import type {Habit,} from "../types/habit";
 
 import {getCurrentWeek,} from "../utils/getCurrentWeek";
+import BackButton from "@/components/navigation/BackButton";
 
 function getDefaultValue(
     habitType: Habit["habit_type"],
@@ -81,7 +82,7 @@ export default function TodayPage() {
     }
 
     return (
-        <main className="mx-auto mt-5 flex w-full max-w-7xl flex-col gap-4 px-4 py-6">
+        <main className="mx-auto mt-0 flex w-full max-w-7xl flex-col gap-4 px-4 py-0">
 
             <section className="flex items-center justify-between">
 
@@ -94,7 +95,7 @@ export default function TodayPage() {
                         {completedHabits} / {habits.length} completed
                     </p>
                 </div>
-
+                <BackButton />
             </section>
 
             <section className="rounded-2xl border border-zinc-800 bg-zinc-950 p-4">

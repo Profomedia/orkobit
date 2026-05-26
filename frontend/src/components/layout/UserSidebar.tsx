@@ -155,6 +155,7 @@ export default function UserSideBar() {
                     hover:scale-110
                     transition-transform
                     cursor-pointer
+                    
                 "
             >
                 <User />
@@ -171,7 +172,7 @@ export default function UserSideBar() {
                         inset-0
                         bg-black/50
                         backdrop-blur-sm
-                        z-40
+                        z-50
                     "
                     onClick={handleToggleSidebar}
                 />
@@ -192,7 +193,7 @@ export default function UserSideBar() {
                     border-l
                     border-zinc-800
                     shadow-2xl
-                    z-50
+                    z-500
 
                     transform
                     transition-transform
@@ -258,7 +259,7 @@ export default function UserSideBar() {
 
                     {/* Welcome */}
 
-                    <div className="mt-5 text-center">
+                    <div className="mt-5 text-center z-1000">
                         <p
                             className="
                                 text-xs

@@ -3,6 +3,7 @@ import {useMemo} from "react";
 import {useParams} from "react-router-dom";
 
 import {useHabitEntries} from "../../../hooks/useHabitEntries";
+import BackButton from "@/components/navigation/BackButton";
 
 interface CalendarDay {
     date: string;
@@ -77,14 +78,16 @@ export default function HabitDetailPage() {
                 {/* Header */}
 
                 <div
-                    className="
-            rounded-3xl border border-zinc-800
-            bg-zinc-900/60 p-6
-          "
+                    className=" flex justify-between
+                            rounded-3xl border border-zinc-800
+                            bg-zinc-900/60 p-6
+                        "
                 >
-                    <h1 className="text-4xl font-bold">Habit Analytics</h1>
-
-                    <p className="mt-2 text-zinc-400">UUID: {uuid}</p>
+                    <div className="">
+                        <h1 className="text-4xl font-bold">Habit Analytics</h1>
+                        <p className="mt-2 text-zinc-400">UUID: {uuid}</p>
+                    </div>
+                <BackButton />
                 </div>
 
                 {/* Heatmap */}
@@ -93,10 +96,10 @@ export default function HabitDetailPage() {
 
                 <section
                     className="
-    mt-8 rounded-3xl border
-    border-zinc-800 bg-zinc-900/60
-    p-6
-  "
+                        mt-8 rounded-3xl border
+                        border-zinc-800 bg-zinc-900/60
+                        p-6
+                    "
                 >
                     <div className="flex items-center justify-between">
                         <div>
