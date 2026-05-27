@@ -141,6 +141,7 @@ export default function UserSidebar() {
 
             <button
                 type="button"
+                aria-label="Open user sidebar"
                 onClick={handleToggleSidebar}
                 className="
                     flex h-10 w-10 items-center justify-center
