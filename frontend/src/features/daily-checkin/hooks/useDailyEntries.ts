@@ -1,4 +1,5 @@
-import type {HabitEntry} from "../types/daily-checkin.types";
+
+import { HabitEntry } from "@/types/habit-entry.types";
 import {useState} from "react";
 
 export function useDailyEntries() {
@@ -6,10 +7,10 @@ export function useDailyEntries() {
 
     function upsertEntry(entry: HabitEntry) {
         setEntries((prev) => {
-            const exists = prev.find((item) => item.habit_id === entry.habit_id);
+            const exists = prev.find((item) => item.habit=== entry.habit);
 
             if (exists) {
-                return prev.map((item) => (item.habit_id === entry.habit_id ? entry : item));
+                return prev.map((item) => (item.habit === entry.habit? entry : item));
             }
 
             return [...prev, entry];

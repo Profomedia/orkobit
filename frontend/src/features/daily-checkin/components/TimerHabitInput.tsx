@@ -7,16 +7,18 @@ import {useUpsertHabitEntry,} from
 
 interface TimerHabitInputProps {
     habitId: string;
+    date:string;
+    disabled?:boolean;
 }
 
 export default function TimerHabitInput({
-    habitId,
+    habitId,date, disabled
 }: TimerHabitInputProps) {
 
     const value = useDailyCheckinStore(
         (state) => state.getValue(
             habitId,
-            0,
+            "0",
         ) as number,
     );
 
@@ -30,7 +32,7 @@ export default function TimerHabitInput({
 
     const updateValue = (minutes: number) => {
 
-        setValue(habitId, minutes);
+        setValue(habitId, date, minutes);
 
         mutation.mutate({
             habit: habitId,

@@ -1,24 +1,36 @@
-export type HabitType = "checkbox" | "number" | "timer" | "boolean" | "rating" | "streak";
+export type HabitType =
+    | "checkbox"
+    | "number"
+    | "timer";
+
+export type FrequencyType =
+    | "daily"
+    | "weekly"
+    | "monthly";
+
+export type HabitValue =
+    | boolean
+    | number;
 
 export interface Habit {
-    id: number;
-    uuid: string;
+    id: string;
 
     name: string;
-    description: string | null;
+
+    description?: string;
 
     habit_type: HabitType;
 
-    target_value: number;
+    frequency_type: FrequencyType;
 
-    unit: string | null;
+    target_value?: number;
 
-    color: string;
+    is_archived?: boolean;
 
-    icon: string | null;
+    created_at?: string;
 
-    is_archived: boolean;
-
-    created_at: string;
-    updated_at: string;
+    updated_at?: string;
+    color?: string;
+    weekly_target?:number;
+    unit?:string;
 }

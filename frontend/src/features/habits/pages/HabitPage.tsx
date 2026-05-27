@@ -29,7 +29,7 @@ export default function HabitPage() {
 
                 <section className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
                     {habits?.map((habit) => (
-                        <HabitCard key={habit.uuid} habit={habit} />
+                        <HabitCard key={habit.id} habit={habit} />
                     ))}
                 </section>
             </div>

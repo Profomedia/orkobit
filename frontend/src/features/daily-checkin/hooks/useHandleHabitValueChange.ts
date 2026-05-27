@@ -11,13 +11,13 @@ export function useHandleHabitValueChange() {
 
     const {mutateAsync: saveHabitEntryMutation} = useSaveHabitEntry();
 
-    async function handleHabitValueChange(habit: Habit, value: boolean | number) {
+    async function handleHabitValueChange(habit: Habit, value: boolean | number, date: string) {
         const habitId = String(habit.id);
 
         /**
          * Optimistic UI update
          */
-        setValue(habitId, value);
+        setValue(habitId,date, value);
 
         try {
             const payload = buildHabitEntryPayload(habit, value);

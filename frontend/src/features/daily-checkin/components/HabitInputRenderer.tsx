@@ -1,13 +1,22 @@
-import type {Habit,} from "../types/daily-checkin.types";
 
+
+import { Habit, HabitValue} from "@/types/habit.types";
 import BooleanHabitInput from "./BooleanHabitInput";
 import NumberHabitInput from "./NumberHabitInput";
 import TimerHabitInput from "./TimerHabitInput";
 
 interface HabitInputRendererProps {
     habit: Habit;
+
+    value: HabitValue;
+
     date: string;
+
     disabled?: boolean;
+
+    onChange: (
+        value: HabitValue,
+    ) => void;
 }
 
 export default function HabitInputRenderer({
@@ -18,7 +27,7 @@ export default function HabitInputRenderer({
 
     switch (habit.habit_type) {
 
-        case "boolean":
+        case "checkbox":
             return (
                 <BooleanHabitInput
                     habitId={habit.id}

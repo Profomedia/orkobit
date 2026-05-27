@@ -7,18 +7,17 @@ import {useHabits,} from "@/hooks/useHabits";
 
 import {useDailyCheckinStore,} from "../store/dailyCheckin.store";
 
-import type {Habit,} from "../types/habit";
-
 import {getCurrentWeek,} from "../utils/getCurrentWeek";
 import BackButton from "@/components/navigation/BackButton";
+import { Habit, HabitValue } from "@/types/habit.types";
 
 function getDefaultValue(
     habitType: Habit["habit_type"],
-): boolean | number {
+): HabitValue {
 
     switch (habitType) {
 
-        case "boolean":
+        case "checkbox":
             return false;
 
         case "number":
@@ -28,7 +27,7 @@ function getDefaultValue(
             return 0;
 
         default:
-            return 0;
+            return false;
     }
 }
 
@@ -52,6 +51,7 @@ export default function TodayPage() {
 
             const value = getValue(
                 String(habit.id),
+                dayjs().format("YYYY-MM-DD"),
                 getDefaultValue(habit.habit_type),
             );
 
@@ -145,6 +145,11 @@ export default function TodayPage() {
                         ">
 
                             {weekDays.map((day) => {
+                                 const value = getValue(
+                                    habit.id,
+                                    day.date,
+                                    getDefaultValue(habit.habit_type),
+                                );
 
                                 const isToday = (
                                     day.date
@@ -190,6 +195,8 @@ export default function TodayPage() {
                                         <HabitInputRenderer
                                             habit={habit}
                                             date={day.date}
+                                            value={value}
+                                            onChange={()=> {}}
                                             disabled={isFuture}
                                         />
                                         <div className="border-zinc-600 w-1/2 border-2 rounded-full"></div>

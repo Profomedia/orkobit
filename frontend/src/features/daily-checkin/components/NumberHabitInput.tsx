@@ -33,7 +33,7 @@ export default function NumberHabitInput({
         String(storedValue),
     );
 
-    const timeoutRef = useRef<NodeJS.Timeout | null>(
+    const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
         null,
     );
 
@@ -109,6 +109,7 @@ export default function NumberHabitInput({
             </div>
 
             <input
+                placeholder="..."
                 type="number"
                 min={0}
                 value={inputValue}
