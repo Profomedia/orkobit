@@ -15,7 +15,7 @@ interface MenuItem {
     isAction?: boolean;
 }
 
-export default function UserSideBar() {
+export default function UserSidebar() {
 
     const [isOpen, setIsOpen] = useState(false);
 

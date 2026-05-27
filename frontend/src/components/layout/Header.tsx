@@ -2,7 +2,7 @@ import {Link,} from "react-router-dom";
 
 import logo from "/pngs/logo.png";
 
-import UserSideBar from "./UserSideBar";
+import UserSidebar from "./UserSidebar";
 
 export default function Header() {
 
@@ -111,7 +111,7 @@ export default function Header() {
 
                     </nav>
 
-                    <UserSideBar />
+                    <UserSidebar />
 
                 </div>
 
