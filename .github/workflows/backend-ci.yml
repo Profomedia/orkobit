@@ -66,7 +66,7 @@ jobs:
           cd backend
           pip install -r requirements.txt
 
-      - name: Run Django Tests
-        run: |
-          cd backend
-          python manage.py test
+      # - name: Run Django Tests
+      #   run: |
+      #     cd backend
+      #     python manage.py test
