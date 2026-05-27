@@ -7,8 +7,8 @@ services:
 
     restart: unless-stopped
 
-    env_file:
-      - /opt/ororklabs/orkobit/.env
+    # env_file:
+    #   - /opt/ororklabs/orkobit/.env
 
     depends_on:
       - db
