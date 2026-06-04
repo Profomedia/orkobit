@@ -13,6 +13,7 @@ services:
 
     ports:
       - "8029:8000"
+    restart: unless-stopped
 
     env_file:
       - .env
@@ -58,6 +59,7 @@ services:
     container_name: orkobit_worker
 
     working_dir: /app/backend
+    restart: unless-stopped
 
     volumes:
       - ./backend:/app/backend
@@ -87,6 +89,7 @@ services:
 
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
 
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U orkobit_user -d orkobit_db"]
@@ -110,7 +113,7 @@ services:
     image: redis:7
 
     container_name: orkobit_redis
-
+    restart: unless-stopped
     ports:
       - "6329:6379"
 

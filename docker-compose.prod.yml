@@ -119,7 +119,7 @@ services:
       - "443:443"
 
     volumes:
-      - ./infrastructure/caddy/Caddyfile:/etc/caddy/Caddyfile
+      - ./infrastructure/caddy/Caddyfile:/etc/caddy
       - caddy_data:/data
       - caddy_config:/config
 
