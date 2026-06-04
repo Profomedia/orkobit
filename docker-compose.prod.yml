@@ -31,7 +31,9 @@ services:
     image: ghcr.io/profomedia/orkobit-frontend:latest
 
     container_name: orko_frontend
-
+    ports:
+      - "8030:80"
+      
     restart: unless-stopped
 
     depends_on:
@@ -107,26 +109,6 @@ services:
     labels:
       - "com.centurylinklabs.watchtower.enable=false"
 
-  watchtower:
-    image: containrrr/watchtower:latest
-
-    container_name: orko_watchtower
-
-    restart: unless-stopped
-
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-
-    command: >
-      --cleanup
-      --interval 60
-      --label-enable
-
-    environment:
-      WATCHTOWER_POLL_INTERVAL: 60
-
-    labels:
-      - "com.centurylinklabs.watchtower.enable=false"
 
 volumes:
   postgres_data:
