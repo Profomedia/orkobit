@@ -134,13 +134,23 @@ SIMPLE_JWT = {
 # --------------------------------------------------
 CORS_ALLOW_CREDENTIALS = True
 
+# CORS_ALLOWED_ORIGINS = [
+#     x.strip() for x in os.getenv("CORS_ALLOWED_ORIGINS", "").split(",") if x.strip()
+# ]
+
+# CSRF_TRUSTED_ORIGINS = [
+#     x.strip() for x in os.getenv("CSRF_TRUSTED_ORIGINS", "").split(",") if x.strip()
+# ]
+
 CORS_ALLOWED_ORIGINS = [
-    x.strip() for x in os.getenv("CORS_ALLOWED_ORIGINS", "").split(",") if x.strip()
+    "https://orkobit.ororklabs.co.ke",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    x.strip() for x in os.getenv("CSRF_TRUSTED_ORIGINS", "").split(",") if x.strip()
+    "https://orkobit.ororklabs.co.ke",
 ]
+
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 if DEBUG:
     CORS_ALLOW_ALL_ORIGINS = True
