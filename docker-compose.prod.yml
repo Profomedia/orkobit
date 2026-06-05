@@ -17,10 +17,6 @@ services:
     ports:
       - "8010:8000"
 
-          # adding to caddy network called proxy
-    networks:
-      - default
-      - proxy
 
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/admin/login/')"]
@@ -47,10 +43,6 @@ services:
     expose:
       - "80"
     
-    # adding to caddy network called proxy
-    networks:
-      - default
-      - proxy
 
     healthcheck:
       test: ["CMD", "wget", "--spider", "http://localhost"]
