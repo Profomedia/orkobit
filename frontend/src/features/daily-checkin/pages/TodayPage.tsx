@@ -17,7 +17,7 @@ function getDefaultValue(
 
     switch (habitType) {
 
-        case "checkbox":
+        case "boolean":
             return false;
 
         case "number":
