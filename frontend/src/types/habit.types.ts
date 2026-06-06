@@ -1,5 +1,6 @@
 export type HabitType =
-    | "checkbox"
+    | "boolean"
+    | "rating"
     | "number"
     | "timer";
 

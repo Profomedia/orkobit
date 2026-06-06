@@ -24,7 +24,7 @@ export default function BooleanHabitInput({
     const setValue = useDailyCheckinStore(
         (state) => state.setValue,
     );
-
+ 
     const mutation = useUpsertHabitEntry();
 
     const toggleValue = () => {

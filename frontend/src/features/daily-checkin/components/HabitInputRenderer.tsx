@@ -27,7 +27,7 @@ export default function HabitInputRenderer({
 
     switch (habit.habit_type) {
 
-        case "checkbox":
+        case "boolean":
             return (
                 <BooleanHabitInput
                     habitId={habit.id}
