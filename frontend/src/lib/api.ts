@@ -24,6 +24,8 @@ const api = axios.create({
     baseURL: BASE_URL,
 });
 
+// console.log("API URL:", import.meta.env.VITE_API_URL);
+
 // --------------------------------------------------
 // REQUEST INTERCEPTOR
 // --------------------------------------------------
