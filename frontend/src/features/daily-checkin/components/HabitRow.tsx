@@ -1,6 +1,6 @@
 
 
-import { Habit } from "@/types/habit.types";
+import type { Habit } from "@/types/habit.types";
 import HabitInputRenderer from "./HabitInputRenderer";
 
 interface HabitRowProps {

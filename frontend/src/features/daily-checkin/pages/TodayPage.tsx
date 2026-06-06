@@ -9,7 +9,7 @@ import {useDailyCheckinStore,} from "../store/dailyCheckin.store";
 
 import {getCurrentWeek,} from "../utils/getCurrentWeek";
 import BackButton from "@/components/navigation/BackButton";
-import { Habit, HabitValue } from "@/types/habit.types";
+import type { Habit, HabitValue } from "@/types/habit.types";
 
 function getDefaultValue(
     habitType: Habit["habit_type"],

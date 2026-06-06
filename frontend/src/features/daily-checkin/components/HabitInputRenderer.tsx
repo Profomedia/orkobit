@@ -1,6 +1,6 @@
 
 
-import { Habit, HabitValue} from "@/types/habit.types";
+import type { Habit, HabitValue} from "@/types/habit.types";
 import BooleanHabitInput from "./BooleanHabitInput";
 import NumberHabitInput from "./NumberHabitInput";
 import TimerHabitInput from "./TimerHabitInput";

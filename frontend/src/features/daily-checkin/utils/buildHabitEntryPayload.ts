@@ -10,7 +10,7 @@ export function buildHabitEntryPayload(habit: Habit, value: boolean | number): S
     };
 
     switch (habit.habit_type) {
-        case "checkbox":
+        case "boolean":
             payload.value_boolean = Boolean(value);
 
             break;

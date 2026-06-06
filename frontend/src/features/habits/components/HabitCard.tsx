@@ -1,6 +1,6 @@
 
-import { Habit, HabitType } from "@/types/habit.types";
-import { Clock3, Hash, ToggleLeft} from "lucide-react";
+import type { Habit, HabitType } from "@/types/habit.types";
+import { Clock3, Hash, Star, ToggleLeft} from "lucide-react";
 
 import {useNavigate} from "react-router-dom";
 
@@ -10,10 +10,10 @@ interface HabitCardProps {
 
 const habitTypeIcons: Record<HabitType, React.ReactNode> = {
     number: <Hash className="h-4 w-4" />,
-
+    rating: <Star className="h-4 w-4" />,
     timer: <Clock3 className="h-4 w-4" />,
 
-    checkbox: <ToggleLeft className="h-4 w-4" />,
+    boolean: <ToggleLeft className="h-4 w-4" />,
 };
 
 export default function HabitCard({habit}: HabitCardProps) {

@@ -1,5 +1,5 @@
 
-import { HabitEntry } from "@/types/habit-entry.types";
+import type { HabitEntry } from "@/types/habit-entry.types";
 import {useState} from "react";
 
 export function useDailyEntries() {
