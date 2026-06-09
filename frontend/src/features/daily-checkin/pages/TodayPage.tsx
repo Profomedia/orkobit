@@ -145,7 +145,18 @@ export default function TodayPage() {
                         ">
 
                             {weekDays.map((day) => {
-                                 const value = getValue(
+                                const habitCreatedDate = dayjs(habit.created_at).format("YYYY-MM-DD")
+                                const existedOnThisDate = day.date >= habitCreatedDate;
+
+                                if (!existedOnThisDate) {
+                                    return (
+                                        <div
+                                            key={day.date}
+                                            className="min-w-[88px] lg:min-w-0"
+                                        />
+                                    );
+                                }
+                                const value = getValue(
                                     habit.id,
                                     day.date,
                                     getDefaultValue(habit.habit_type),

@@ -55,6 +55,8 @@ export default function Header() {
                 border-b border-zinc-800
                 bg-h-bg/95
                 backdrop-blur
+                w-screen
+                
             "
         >
             <div

@@ -19,6 +19,7 @@ const INPUT_STYLES = `
   focus:border-zinc-600
 `;
 
+
 export default function CreateHabitForm() {
     const mutation = useCreateHabit();
 

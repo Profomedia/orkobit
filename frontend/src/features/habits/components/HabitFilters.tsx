@@ -3,6 +3,7 @@ const filters = ["All", "Active", "Completed"] as const;
 export default function HabitFilters() {
     return (
         <div className="flex flex-wrap items-center gap-2">
+            
             {filters.map((filter) => (
                 <button
                 type="button"

@@ -5,7 +5,7 @@ export default function CreateHabitPage() {
     const navigate = useNavigate();
 
     return (
-        <main className="min-h-screen bg-bg text-txt">
+        <main className="h-full overflow-x-hidden text-txt">
             <div className="mx-auto max-w-2xl px-6 py-10">
                 <button onClick={() => navigate(-1)} 
                 type="button"

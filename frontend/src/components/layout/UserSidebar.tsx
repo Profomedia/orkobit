@@ -114,7 +114,7 @@ export default function UserSidebar() {
         border-b border-zinc-800
         transition-all duration-200
         text-left
-
+        
         ${
             isActive(path)
                 ? `
@@ -149,6 +149,7 @@ export default function UserSidebar() {
                     text-txt
                     transition-all
                     hover:scale-110
+                    z-50
                 "
             >
                 <User />
@@ -189,18 +190,14 @@ export default function UserSidebar() {
                         ease-in-out
                     `,
 
-                    isOpen
-                        ? "translate-x-0"
-                        : "translate-x-full",
+                    isOpen ? "translate-x-0" : "translate-x-full",
                 ].join(" ")}
             >
-
                 {/* ================================================== */}
                 {/* HEADER */}
                 {/* ================================================== */}
 
                 <div className="flex justify-end p-4">
-
                     <button
                         type="button"
                         onClick={handleToggleSidebar}
@@ -213,7 +210,6 @@ export default function UserSidebar() {
                     >
                         ✕
                     </button>
-
                 </div>
 
                 {/* ================================================== */}
@@ -226,7 +222,6 @@ export default function UserSidebar() {
                         px-6 pb-8
                     "
                 >
-
                     <div
                         className="
                             flex h-24 w-24 items-center justify-center
@@ -239,7 +234,6 @@ export default function UserSidebar() {
                     </div>
 
                     <div className="mt-5 text-center">
-
                         <p
                             className="
                                 text-xs uppercase tracking-widest
@@ -257,9 +251,7 @@ export default function UserSidebar() {
                         >
                             {user?.username || "User"}
                         </p>
-
                     </div>
-
                 </div>
 
                 {/* ================================================== */}
@@ -267,11 +259,8 @@ export default function UserSidebar() {
                 {/* ================================================== */}
 
                 <nav className="flex-1 overflow-y-auto">
-
                     <ul>
-
                         {MENU_ITEMS.map((item: MenuItem) => {
-
                             const Icon = item.icon;
 
                             // ==========================================
@@ -279,24 +268,17 @@ export default function UserSidebar() {
                             // ==========================================
 
                             if (item.isAction) {
-
                                 return (
                                     <li key={item.label}>
-
                                         <button
                                             type="button"
                                             onClick={handleLogout}
                                             className={menuItemClass(item.path)}
                                         >
-
                                             <Icon className="text-lg" />
 
-                                            <span>
-                                                {item.label}
-                                            </span>
-
+                                            <span>{item.label}</span>
                                         </button>
-
                                     </li>
                                 );
                             }
@@ -307,28 +289,19 @@ export default function UserSidebar() {
 
                             return (
                                 <li key={item.label}>
-
                                     <Link
                                         to={item.path}
                                         className={menuItemClass(item.path)}
                                     >
-
                                         <Icon className="text-lg" />
 
-                                        <span>
-                                            {item.label}
-                                        </span>
-
+                                        <span>{item.label}</span>
                                     </Link>
-
                                 </li>
                             );
                         })}
-
                     </ul>
-
                 </nav>
-
             </aside>
         </>
     );

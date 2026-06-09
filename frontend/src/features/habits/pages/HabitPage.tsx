@@ -3,8 +3,13 @@ import HabitCard from "../components/HabitCard";
 import HabitHeader from "../components/HabitHeader";
 import HabitSearch from "../components/HabitSearch";
 import HabitFilters from "../components/HabitFilters";
+import Button from "@/components/ui/Button";
+import { useState } from "react";
+import CreateHabitForm from "@/features/daily-checkin/components/CreateHabitForm";
+import { useNavigate } from "react-router-dom";
 
 export default function HabitPage() {
+    const navigate = useNavigate()
     const {data: habits, isLoading, isError} = useHabits();
 
     console.log(habits);
@@ -22,8 +27,16 @@ export default function HabitPage() {
                 <HabitHeader />
 
                 <div className="flex flex-col gap-4 rounded-2xl border border-zinc-800 bg-zinc-900/60 p-4 backdrop-blur-sm md:flex-row md:items-center md:justify-between">
-                    <HabitSearch />
-
+                    <div className="flex">
+                        <HabitSearch />
+                        <Button
+                            type="button"
+                            className="cursor-pointer"
+                            onClick={()=> navigate("/habit/new")}
+                        >
+                            New Habit
+                        </Button>
+                    </div>
                     <HabitFilters />
                 </div>
 
@@ -32,6 +45,7 @@ export default function HabitPage() {
                         <HabitCard key={habit.id} habit={habit} />
                     ))}
                 </section>
+                
             </div>
         </main>
     );

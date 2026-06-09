@@ -1,6 +1,7 @@
 export default function HabitSearch() {
     return (
         <div className="w-full md:max-w-sm">
+            
             <input
                 type="text"
                 placeholder="Search habits..."

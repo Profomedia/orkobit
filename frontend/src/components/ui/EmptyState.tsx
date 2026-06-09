@@ -74,7 +74,8 @@ export default function EmptyState({onStart}: EmptyStateProps) {
                 className=" text-txt-lt mt-4 w-full leading-relaxed
                 "
             >
-                Build discipline. Track consistency. Become <span className="font-semibold text-txt">{username}</span>
+                Build discipline. Track consistency. Become{" "}
+                <span className="font-semibold text-txt">{username}</span>
             </p>
 
             {/* Quote */}
@@ -95,19 +96,22 @@ export default function EmptyState({onStart}: EmptyStateProps) {
 
             <div className="mt-10">
                 <Button
-                type="button"
+                    type="button"
                     onClick={onStart}
                     className="
                         w-20 h-20 !rounded-full
                         bg-bg text-white text-4xl font-extrabold
+                        cursor-pointer
+                        hover:scale-110 hover:bg-lite hover:text-txt-lt 
                         flex items-center justify-center
                         shadow-md
                         transition-all duration-300
-                        hover:scale-110 hover:bg-lite hover:text-txt-lt hover:cursor-pointer
                         active:scale-95
                     "
                 >
-                    <span className="leading-none relative top-[-2px] !text-[40px]">+</span>
+                    <span className="leading-none relative top-[-2px] !text-[40px]">
+                        +
+                    </span>
                 </Button>
             </div>
         </section>

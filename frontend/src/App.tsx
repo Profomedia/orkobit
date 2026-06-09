@@ -1,7 +1,11 @@
 import AppRouter from "./app/router";
 
 function App() {
-    return <AppRouter />;
+
+    return <div className="overflow-hidden">
+
+        <AppRouter />;
+    </div>
 }
 
 export default App;
