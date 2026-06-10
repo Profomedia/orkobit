@@ -48,24 +48,27 @@ export default function TodayPage() {
     );
 
     useEffect(() => {
-        if (!entries?.results) {
-            return;
-        }
-
-        entries.results.forEach((entry: { value_boolean: any; value_number: any; duration_seconds: any; date: string; habit: string; }) => {
+        entries.forEach((entry: { value_boolean: any; value_number: any; duration_seconds: any; date: string; habit: string; }) => {
             const value =
                 entry.value_boolean ??
                 entry.value_number ??
                 entry.duration_seconds ??
                 0;
 
+            console.log("Hydrating:", entry.date, entry.habit, value);
+
             setValue(entry.date, entry.habit, value);
         });
+
+        // console.log(
+        //     "Store after hydration:",
+        //     useDailyCheckinStore.getState().values,
+        // );
     }, [entries, setValue]);
 
-    console.log("entries", entries);
-    console.log("isArray", Array.isArray(entries));
-
+    // console.log("entries", entries);
+    // console.log("isArray", Array.isArray(entries));
+    // console.log(useDailyCheckinStore.getState().values);
     const weekDays = getCurrentWeek();
 
 const completedHabits = useMemo(() => {
