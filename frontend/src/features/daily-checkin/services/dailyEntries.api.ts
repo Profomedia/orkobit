@@ -39,3 +39,16 @@ export async function saveHabitEntry(payload: SaveHabitEntryPayload) {
 
     return response.data;
 }
+
+
+
+
+import type {HabitEntry,} from "@/types/habit-entry.types";
+
+export async function getDailyEntries(): Promise<HabitEntry[]> {
+    const {data,} = await api.get(
+        "/habit-entries/",
+    );
+
+    return data;
+}

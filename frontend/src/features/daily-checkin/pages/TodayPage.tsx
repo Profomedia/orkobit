@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import {useMemo,} from "react";
+import {useEffect, useMemo,} from "react";
 
 import HabitInputRenderer from "../components/HabitInputRenderer";
 
@@ -10,6 +10,7 @@ import {useDailyCheckinStore,} from "../store/dailyCheckin.store";
 import {getCurrentWeek,} from "../utils/getCurrentWeek";
 import BackButton from "@/components/navigation/BackButton";
 import type { Habit, HabitValue } from "@/types/habit.types";
+import { useHabitEntries } from "../hooks/useHabitEntries";
 
 function getDefaultValue(
     habitType: Habit["habit_type"],
@@ -39,31 +40,49 @@ export default function TodayPage() {
         isError,
     } = useHabits();
 
+    const setValue = useDailyCheckinStore((state) => state.setValue);
+    const { data: entries = [] } = useHabitEntries();
+
     const getValue = useDailyCheckinStore(
         (state) => state.getValue,
     );
 
+    useEffect(() => {
+        if (!entries?.results) {
+            return;
+        }
+
+        entries.results.forEach((entry: { value_boolean: any; value_number: any; duration_seconds: any; date: string; habit: string; }) => {
+            const value =
+                entry.value_boolean ??
+                entry.value_number ??
+                entry.duration_seconds ??
+                0;
+
+            setValue(entry.date, entry.habit, value);
+        });
+    }, [entries, setValue]);
+
+    console.log("entries", entries);
+    console.log("isArray", Array.isArray(entries));
+
     const weekDays = getCurrentWeek();
 
-    const completedHabits = useMemo(() => {
+const completedHabits = useMemo(() => {
+    return habits.filter((habit) => {
+        const value = getValue(
+            dayjs().format("YYYY-MM-DD"),
+            String(habit.id),
+            getDefaultValue(habit.habit_type),
+        );
 
-        return habits.filter((habit) => {
+        if (typeof value === "boolean") {
+            return value;
+        }
 
-            const value = getValue(
-                String(habit.id),
-                dayjs().format("YYYY-MM-DD"),
-                getDefaultValue(habit.habit_type),
-            );
-
-            if (typeof value === "boolean") {
-                return value;
-            }
-
-            return value > 0;
-
-        }).length;
-
-    }, [habits, getValue]);
+        return value > 0;
+    }).length;
+}, [habits, getValue]);
 
     if (isLoading) {
         return (
@@ -106,6 +125,7 @@ export default function TodayPage() {
                     </h2>
 
                     <p className="text-sm text-lite">
+
                         Track consistency across the week
                     </p>
                 </div>
@@ -157,8 +177,8 @@ export default function TodayPage() {
                                     );
                                 }
                                 const value = getValue(
-                                    habit.id,
                                     day.date,
+                                    habit.id,
                                     getDefaultValue(habit.habit_type),
                                 );
 

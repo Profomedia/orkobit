@@ -143,9 +143,8 @@ class HabitViewSet(
 class HabitEntryViewSet(
     viewsets.ModelViewSet
 ):
-    serializer_class = (
-        HabitEntrySerializer
-    )
+    pagination_class = None
+    serializer_class = (HabitEntrySerializer)
 
     def get_queryset(self):
 
@@ -165,8 +164,6 @@ class HabitEntryViewSet(
             queryset = queryset.filter(
                 habit__id=habit_id,
             )
-
-       
 
         return queryset
 

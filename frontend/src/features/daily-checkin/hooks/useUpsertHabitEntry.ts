@@ -43,7 +43,7 @@ export function useUpsertHabitEntry() {
                     break;
 
                 case "timer":
-                    body.value_timer = payload.value;
+                    body.duration_seconds = payload.value;
                     break;
 
                 case "rating":
