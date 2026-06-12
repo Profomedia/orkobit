@@ -192,7 +192,7 @@ export default function AuthForm({mode = "login", onSubmit}: AuthFormProps) {
 
                     {/* Submit */}
 
-                    <Button type="submit" variant="form-auth" className="w-full mt-4">
+                    <Button type="submit" variant="form-auth" className="w-full mt-4 cursor-pointer">
                         {isRegister ? "Register" : "Login"}
                     </Button>
 

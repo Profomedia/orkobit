@@ -64,6 +64,7 @@ export default function HabitDetailPage() {
     }
 
     if (isError) {
+        
         return <main className="p-6 text-red-400">Failed to load entries.</main>;
     }
 

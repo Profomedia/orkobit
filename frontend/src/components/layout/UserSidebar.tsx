@@ -149,7 +149,7 @@ export default function UserSidebar() {
                     text-txt
                     transition-all
                     hover:scale-110
-                    z-50
+                    z-50 cursor-pointer
                 "
             >
                 <User />

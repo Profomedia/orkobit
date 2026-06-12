@@ -64,7 +64,7 @@ export default function AppRouter() {
                 />
 
                 <Route
-                    path="/habits/:uuid"
+                    path="/habit/:uuid"
                     element={
                         <ProtectedRoute>
                             <HabitDetailPage />

@@ -20,7 +20,7 @@ export default function HabitCard({habit}: HabitCardProps) {
     const navigate = useNavigate();
 
     function handleNavigate() {
-        navigate(`/habits/${habit.id}`);
+        navigate(`/habit/${habit.id}`);
     }
 
     return (

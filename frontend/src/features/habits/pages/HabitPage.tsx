@@ -4,15 +4,13 @@ import HabitHeader from "../components/HabitHeader";
 import HabitSearch from "../components/HabitSearch";
 import HabitFilters from "../components/HabitFilters";
 import Button from "@/components/ui/Button";
-import { useState } from "react";
-import CreateHabitForm from "@/features/daily-checkin/components/CreateHabitForm";
 import { useNavigate } from "react-router-dom";
 
 export default function HabitPage() {
     const navigate = useNavigate()
     const {data: habits, isLoading, isError} = useHabits();
 
-    console.log(habits);
+    console.log(habits)
     if (isLoading) {
         return <main className="min-h-screen bg-zinc-950 p-6 text-zinc-100">Loading habits...</main>;
     }

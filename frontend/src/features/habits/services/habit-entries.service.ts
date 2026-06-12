@@ -6,5 +6,7 @@ import api from "@/lib/api";
 export async function getHabitEntries(habitId: string): Promise<HabitEntry[]> {
     const response = await api.get<PaginatedResponse<HabitEntry>>(`/habit-entries/?habit=${habitId}`);
 
-    return response.data.results;
+    console.log("habit entries response", response.data);
+
+    return response.data.results ?? [];
 }
