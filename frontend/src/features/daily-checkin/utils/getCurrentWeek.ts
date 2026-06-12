@@ -1,5 +1,6 @@
 import dayjs from "dayjs";
 import advancedFormat from "dayjs/plugin/advancedFormat";
+
 dayjs.extend(advancedFormat);
 
 export interface WeekDay {
@@ -7,11 +8,15 @@ export interface WeekDay {
     shortLabel: string;
 }
 
-export function getCurrentWeek(): WeekDay[] {
+export function getWeek(
+    weekOffset = 0,
+): WeekDay[] {
 
-    const start = dayjs().startOf("week");
+    const start = dayjs()
+        .add(weekOffset, "week")
+        .startOf("week");
 
-    return Array.from({length: 7,}).map((_, index) => {
+    return Array.from({length: 7,}, (_, index) => {
 
         const day = start.add(index, "day");
 
