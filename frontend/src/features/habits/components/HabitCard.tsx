@@ -152,12 +152,7 @@ export default function HabitCard({ habit }: HabitCardProps) {
                         )}
                     </div>
 
-                    {habit.frequency_type === "weekly_count" &&
-                        habit.weekly_target && (
-                            <p className="mt-2 text-sm text-zinc-500">
-                                {habit.weekly_target} times per week
-                            </p>
-                        )}
+                    
                 </div>
 
                 {/* Footer */}
