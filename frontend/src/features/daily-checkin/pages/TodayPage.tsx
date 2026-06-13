@@ -11,6 +11,8 @@ import { getWeek } from "../utils/getCurrentWeek";
 import BackButton from "@/components/navigation/BackButton";
 import type { Habit, HabitValue } from "@/types/habit.types";
 import { useHabitEntries } from "../hooks/useHabitEntries";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 function getDefaultValue(habitType: Habit["habit_type"]): HabitValue {
     switch (habitType) {
@@ -29,6 +31,7 @@ function getDefaultValue(habitType: Habit["habit_type"]): HabitValue {
 }
 
 export default function TodayPage() {
+    const navigate = useNavigate()
     const { data: habits = [], isLoading, isError } = useHabits();
     const [weekOffset, setWeekOffset] = useState(0);
 
@@ -36,7 +39,7 @@ export default function TodayPage() {
     const { data: entries = [] } = useHabitEntries();
 
     const getValue = useDailyCheckinStore((state) => state.getValue);
-
+    
     useEffect(() => {
         entries.forEach(
             (entry: {
@@ -112,7 +115,7 @@ export default function TodayPage() {
                 <BackButton />
             </section>
 
-            <section className="rounded-2xl border border-zinc-800 bg-zinc-950 p-4 flex justify-between items-center">
+            <section className="flex items-center justify-between rounded-2xl border border-zinc-800 bg-zinc-950 p-4">
                 <div>
                     <h2 className="text-lg font-semibold text-txt">
                         Weekly Progress
@@ -135,7 +138,7 @@ export default function TodayPage() {
             hover:text-white
         "
                     >
-                        ←
+                        <ChevronLeft />
                     </button>
 
                     <button
@@ -172,7 +175,7 @@ export default function TodayPage() {
             hover:text-white
         "
                     >
-                        →
+                        <ChevronRight />
                     </button>
                 </div>
             </section>
@@ -184,10 +187,34 @@ export default function TodayPage() {
                         className="rounded-2xl border border-zinc-800 bg-zinc-950 p-4"
                     >
                         <div className="mb-4 flex items-center justify-between">
-                            <div className="flex ">
+                            <div className="flex justify-between w-full">
                                 <h2 className="font-semibold text-txt">
                                     {habit.name}
                                 </h2>
+
+                                <button
+                                    type="button"
+                                    onClick={() =>
+                                        navigate(`/habit/${habit.id}`)
+                                    }
+                                    className="
+        rounded-md
+        border
+        border-zinc-700
+        px-4
+        py-1
+        text-sm
+        font-medium
+        text-zinc-300
+        transition-all
+        hover:border-emerald-500
+        hover:bg-emerald-500/10
+        hover:text-emerald-400
+        cursor-pointer
+    "
+                                >
+                                    View Stats
+                                </button>
                             </div>
                         </div>
 

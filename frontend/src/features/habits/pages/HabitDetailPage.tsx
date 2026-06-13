@@ -38,27 +38,58 @@ export default function HabitDetailPage() {
     const calendar = useMemo(() => {
         const allDays = generateYearCalendar();
 
-        // -----------------------------------
-        // ENTRY LOOKUP MAP
-        // -----------------------------------
-
-        const entryMap = new Map<string, boolean>();
+        const entryMap = new Map<
+            string,
+            {
+                level: number;
+                value: number;
+            }
+        >();
 
         entries?.forEach((entry) => {
-            entryMap.set(entry.date, entry.is_completed);
-        });
+            const value = entry.value_number ?? 0;
 
-        // -----------------------------------
-        // MERGE CALENDAR + ENTRIES
-        // -----------------------------------
+            let level = 0;
+
+            if (value <= 0) {
+                level = 0;
+            } else if (value < 25) {
+                level = 1;
+            } else if (value < 50) {
+                level = 2;
+            } else if (value < 100) {
+                level = 3;
+            } else {
+                level = 4;
+            }
+
+            entryMap.set(entry.date, {
+                level,
+                value,
+            });
+        });
 
         return allDays.map((date) => ({
             date,
-
-            completed: entryMap.get(date) || false,
+            level: entryMap.get(date)?.level ?? 0,
+            value: entryMap.get(date)?.value ?? 0,
         }));
     }, [entries]);
-
+    
+    function getHeatColor(level: number): string {
+        switch (level) {
+            case 1:
+                return "bg-emerald-950";
+            case 2:
+                return "bg-emerald-800";
+            case 3:
+                return "bg-emerald-600";
+            case 4:
+                return "bg-emerald-400";
+            default:
+                return "bg-zinc-800";
+        }
+    }
     if (isLoading) {
         return <main className="p-6 text-white">Loading entries...</main>;
     }
@@ -158,7 +189,7 @@ export default function HabitDetailPage() {
                 h-4 w-4 rounded-[4px]
                 transition-all duration-200
                 hover:scale-125
-                ${day.completed ? "bg-emerald-500" : "bg-zinc-800"}
+                ${getHeatColor(day.level)}
               `}
                                         />
                                     ))}
