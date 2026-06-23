@@ -1,7 +1,6 @@
 import axios, {type AxiosError, type InternalAxiosRequestConfig} from "axios";
 
 import {BASE_URL, REFRESH_URL} from "@/constants/api";
-
 import {ACCESS_TOKEN, REFRESH_TOKEN} from "@/constants/auth";
 
 // --------------------------------------------------
@@ -24,10 +23,11 @@ const api = axios.create({
     baseURL: BASE_URL,
 });
 
-// console.log("API URL:", import.meta.env.VITE_API_URL);
-
 // --------------------------------------------------
 // REQUEST INTERCEPTOR
+// --------------------------------------------------
+// Automatically attach the access token
+// to all outgoing authenticated requests.
 // --------------------------------------------------
 
 api.interceptors.request.use(
@@ -41,13 +41,20 @@ api.interceptors.request.use(
         return config;
     },
 
-    (error) => {
-        return Promise.reject(error);
-    },
+    (error) => Promise.reject(error),
 );
 
 // --------------------------------------------------
 // RESPONSE INTERCEPTOR
+// --------------------------------------------------
+// Handles expired access tokens by:
+// 1. Attempting token refresh
+// 2. Retrying the failed request
+// 3. Logging the user out if refresh fails
+//
+// IMPORTANT:
+// Login and refresh endpoints are excluded
+// from refresh logic to prevent redirect loops.
 // --------------------------------------------------
 
 api.interceptors.response.use(
@@ -57,72 +64,112 @@ api.interceptors.response.use(
         const originalRequest = error.config as RetryableRequest;
 
         // --------------------------------------------------
-        // HANDLE EXPIRED TOKEN
+        // CURRENT TOKENS
         // --------------------------------------------------
 
-        if (error.response?.status === 401 && !originalRequest._retry) {
-            originalRequest._retry = true;
+        const accessToken = localStorage.getItem(ACCESS_TOKEN);
 
-            const refreshToken = localStorage.getItem(REFRESH_TOKEN);
+        const refreshToken = localStorage.getItem(REFRESH_TOKEN);
 
-            // --------------------------------------------------
-            // NO REFRESH TOKEN
-            // --------------------------------------------------
+        // --------------------------------------------------
+        // REQUEST TYPE DETECTION
+        // --------------------------------------------------
+        // Login failures should return errors
+        // to the login form rather than trigger
+        // token refresh logic.
+        // --------------------------------------------------
 
-            if (!refreshToken) {
-                localStorage.removeItem(ACCESS_TOKEN);
+        const isLoginRequest =
+            originalRequest?.url?.includes("/auth/login/") ?? false;
 
-                localStorage.removeItem(REFRESH_TOKEN);
+        const isRefreshRequest =
+            originalRequest?.url?.includes("/auth/refresh/") ?? false;
 
-                window.location.href = "/login";
+        // --------------------------------------------------
+        // SHOULD ATTEMPT TOKEN REFRESH?
+        // --------------------------------------------------
 
-                return Promise.reject(error);
-            }
+        const shouldRefresh =
+            error.response?.status === 401 &&
+            !!accessToken &&
+            !!refreshToken &&
+            !originalRequest._retry &&
+            !isLoginRequest &&
+            !isRefreshRequest;
 
-            try {
-                // --------------------------------------------------
-                // REFRESH ACCESS TOKEN
-                // --------------------------------------------------
+        // --------------------------------------------------
+        // NORMAL ERROR
+        // --------------------------------------------------
 
-                const response = await axios.post<RefreshResponse>(REFRESH_URL, {
-                    refresh: refreshToken,
-                });
-
-                const newAccessToken = response.data.access;
-
-                // --------------------------------------------------
-                // SAVE NEW TOKEN
-                // --------------------------------------------------
-
-                localStorage.setItem(ACCESS_TOKEN, newAccessToken);
-
-                // --------------------------------------------------
-                // UPDATE REQUEST HEADER
-                // --------------------------------------------------
-
-                originalRequest.headers.set("Authorization", `Bearer ${newAccessToken}`);
-
-                // --------------------------------------------------
-                // RETRY ORIGINAL REQUEST
-                // --------------------------------------------------
-
-                return api(originalRequest);
-            } catch (refreshError) {
-                console.error("Token refresh failed:", refreshError);
-
-                // --------------------------------------------------
-                // FORCE LOGOUT
-                // --------------------------------------------------
-
-                localStorage.removeItem(ACCESS_TOKEN);
-
-                localStorage.removeItem(REFRESH_TOKEN);
-
-                window.location.href = "/login";
-            }
+        if (!shouldRefresh) {
+            return Promise.reject(error);
         }
 
-        return Promise.reject(error);
+        // --------------------------------------------------
+        // MARK REQUEST AS RETRIED
+        // --------------------------------------------------
+
+        originalRequest._retry = true;
+
+        try {
+            // --------------------------------------------------
+            // REQUEST NEW ACCESS TOKEN
+            // --------------------------------------------------
+
+            const response = await axios.post<RefreshResponse>(
+                REFRESH_URL,
+                {
+                    refresh: refreshToken,
+                },
+            );
+
+            const newAccessToken = response.data.access;
+
+            // --------------------------------------------------
+            // SAVE NEW ACCESS TOKEN
+            // --------------------------------------------------
+
+            localStorage.setItem(
+                ACCESS_TOKEN,
+                newAccessToken,
+            );
+
+            // --------------------------------------------------
+            // UPDATE FAILED REQUEST
+            // --------------------------------------------------
+
+            originalRequest.headers.set(
+                "Authorization",
+                `Bearer ${newAccessToken}`,
+            );
+
+            // --------------------------------------------------
+            // RETRY ORIGINAL REQUEST
+            // --------------------------------------------------
+
+            return api(originalRequest);
+
+        } catch (refreshError) {
+            // --------------------------------------------------
+            // REFRESH FAILED
+            // --------------------------------------------------
+            // User session is no longer valid.
+            // Force logout and return to login.
+            // --------------------------------------------------
+
+            console.error(
+                "Token refresh failed:",
+                refreshError,
+            );
+
+            localStorage.removeItem(ACCESS_TOKEN);
+
+            localStorage.removeItem(REFRESH_TOKEN);
+
+            window.location.href = "/login";
+
+            return Promise.reject(refreshError);
+        }
     },
 );
 

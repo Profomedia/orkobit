@@ -12,7 +12,7 @@ type AuthMode = "login" | "register";
 interface AuthFormProps {
     mode?: AuthMode;
 
-    onSubmit: (data: AuthFormData) => void;
+    onSubmit: (data: AuthFormData) => Promise<void>;
 }
 
 interface AuthFormData {
@@ -42,14 +42,18 @@ export default function AuthForm({mode = "login", onSubmit}: AuthFormProps) {
         password: "",
         password2: "",
     });
+    const [loading, setLoading] = useState(false)
+    const [submitError, setSubmitError] = useState("")
 
     const [errors, setErrors] = useState<FormErrors>({});
+
 
     // --------------------------------------------------
     // HANDLE INPUT CHANGE
     // --------------------------------------------------
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        
         const {name, value} = e.target;
 
         setFormData((prev) => ({
@@ -96,32 +100,61 @@ export default function AuthForm({mode = "login", onSubmit}: AuthFormProps) {
     // SUBMIT
     // --------------------------------------------------
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+
+        setSubmitError("");
+
+        console.log("before validate");
 
         if (!validate()) {
             return;
         }
 
-        onSubmit(formData);
+        console.log("before submit");
+
+        try {
+            setLoading(true);
+
+            await onSubmit(formData);
+            console.log("after submit");
+        } catch (error) {
+            setSubmitError(
+                error instanceof Error ? error.message : "Login failed",
+            );
+        } 
+        finally {
+            setLoading(false);
+        }
     };
 
     // --------------------------------------------------
     // UI
     // --------------------------------------------------
 
+
     return (
-        <div className="w-full max-w-100 absolute">
+        <div className="w-full max-w-80 absolute">
             {/* Logo */}
 
-            <div className="bg-zinc-900 border border-primary rounded-2xl p-5 text-center">
+            <div className="bg-zinc-900 border border-primary rounded-sm md:rounded-2xl p-2 md:p-5 text-center">
                 <h1 className="text-white text-3xl font-bold">Orkobit</h1>
             </div>
 
             {/* Form */}
 
-            <form onSubmit={handleSubmit} className="bg-zinc-900 border border-zinc-700 rounded-2xl mt-4 p-8 w-full">
-                <h2 className="text-3xl font-bold text-white text-center">{isRegister ? "Register" : "Login"}</h2>
+            <form
+                onSubmit={handleSubmit}
+                className="bg-zinc-900 border border-zinc-700 rounded-sm md:rounded-2xl mt-4 p-6 md:p-8 w-full"
+            >
+                {loading && (
+                    <div className="rounded-xl border border-primary/20 bg-primary/10 p-3 text-center text-sm text-primary">
+                        Authenticating...
+                    </div>
+                )}
+                <h2 className="text-3xl font-bold text-white text-center">
+                    {isRegister ? "Register" : "Login"}
+                </h2>
 
                 <div className="mt-8 space-y-4">
                     {/* Username */}
@@ -133,10 +166,14 @@ export default function AuthForm({mode = "login", onSubmit}: AuthFormProps) {
                             onChange={handleChange}
                             autoComplete="username"
                             placeholder="Username"
-                            className="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-4 py-3 outline-none text-white placeholder:text-zinc-500 focus:border-zinc-500"
+                            className="w-full bg-zinc-800 border border-zinc-700 rounded-sm md:rounded-xl px-4 py-3 outline-none text-white placeholder:text-zinc-500 focus:border-zinc-500"
                         />
 
-                        {errors.username && <p className="text-red-400 text-sm mt-2">{errors.username}</p>}
+                        {errors.username && (
+                            <p className="text-red-400 text-sm mt-2">
+                                {errors.username}
+                            </p>
+                        )}
                     </div>
 
                     {/* Email */}
@@ -149,10 +186,14 @@ export default function AuthForm({mode = "login", onSubmit}: AuthFormProps) {
                                 onChange={handleChange}
                                 autoComplete="email"
                                 placeholder="Email"
-                                className="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-4 py-3 outline-none text-white placeholder:text-zinc-500 focus:border-zinc-500"
+                                className="w-full bg-zinc-800 border border-zinc-700 rounded-sm md:rounded-xl px-4 py-3 outline-none text-white placeholder:text-zinc-500 focus:border-zinc-500"
                             />
 
-                            {errors.email && <p className="text-red-400 text-sm mt-2">{errors.email}</p>}
+                            {errors.email && (
+                                <p className="text-red-400 text-sm mt-2">
+                                    {errors.email}
+                                </p>
+                            )}
                         </div>
                     )}
 
@@ -164,12 +205,18 @@ export default function AuthForm({mode = "login", onSubmit}: AuthFormProps) {
                             type="password"
                             value={formData.password}
                             onChange={handleChange}
-                            autoComplete={isRegister ? "new-password" : "current-password"}
+                            autoComplete={
+                                isRegister ? "new-password" : "current-password"
+                            }
                             placeholder="Password"
-                            className="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-4 py-3 outline-none text-white placeholder:text-zinc-500 focus:border-zinc-500"
+                            className="w-full bg-zinc-800 border border-zinc-700 rounded-sm md:rounded-xl px-4 py-3 outline-none text-white placeholder:text-zinc-500 focus:border-zinc-500"
                         />
 
-                        {errors.password && <p className="text-red-400 text-sm mt-2">{errors.password}</p>}
+                        {errors.password && (
+                            <p className="text-red-400 text-sm mt-2">
+                                {errors.password}
+                            </p>
+                        )}
                     </div>
 
                     {/* Confirm Password */}
@@ -183,17 +230,35 @@ export default function AuthForm({mode = "login", onSubmit}: AuthFormProps) {
                                 onChange={handleChange}
                                 autoComplete="new-password"
                                 placeholder="Confirm Password"
-                                className="w-full bg-zinc-800 border border-zinc-700 rounded-xl px-4 py-3 outline-none text-white placeholder:text-zinc-500 focus:border-zinc-500"
+                                className="w-full bg-zinc-800 border border-zinc-700 rounded-sm md:rounded-xl px-4 py-3 outline-none text-white placeholder:text-zinc-500 focus:border-zinc-500"
                             />
 
-                            {errors.password2 && <p className="text-red-400 text-sm mt-2">{errors.password2}</p>}
+                            {errors.password2 && (
+                                <p className="text-red-400 text-sm mt-2">
+                                    {errors.password2}
+                                </p>
+                            )}
                         </div>
                     )}
 
                     {/* Submit */}
 
-                    <Button type="submit" variant="form-auth" className="w-full mt-4 cursor-pointer">
-                        {isRegister ? "Register" : "Login"}
+                    <Button
+                        type="submit"
+                        variant="form-auth"
+                        disabled={loading}
+                        className="w-full mt-4 rounded-sm md:rounded-xl"
+                    >
+                        {loading ? (
+                            <span className="flex items-center justify-center gap-2">
+                                <span className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                                Signing In...
+                            </span>
+                        ) : isRegister ? (
+                            "Register"
+                        ) : (
+                            "Login"
+                        )}
                     </Button>
 
                     {/* Footer Links */}
@@ -220,11 +285,21 @@ export default function AuthForm({mode = "login", onSubmit}: AuthFormProps) {
             )}
 
           </div> */}
+                    {submitError && (
+                        <div className="rounded-xl border text-center border-red-500/30 bg-red-500/10 p-3 text-sm text-red-400">
+                            {submitError}
+                        </div>
+                    )}
 
                     <div className="text-center mt-4 text-zinc-400 text-sm">
-                        {mode === "login" ? "New to Orkobit?" : "Already registered?"}
+                        {mode === "login"
+                            ? "New to Orkobit?"
+                            : "Already registered?"}
 
-                        <Link to={mode === "login" ? "/register" : "/login"} className="ml-2 text-white underline">
+                        <Link
+                            to={mode === "login" ? "/register" : "/login"}
+                            className="ml-2 text-white underline"
+                        >
                             {mode === "login" ? "Create account" : "Login"}
                         </Link>
                     </div>

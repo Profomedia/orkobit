@@ -62,12 +62,13 @@ export default function Button({
     className,
 
     disabled,
+    type = "button",
 
     ...props
 }: ButtonProps) {
     return (
         <button
-        type="button"
+            type={type}
             className={clsx(
                 // Base
 
@@ -75,7 +76,7 @@ export default function Button({
 
                 "disabled:opacity-50 disabled:cursor-not-allowed",
 
-                "flex flex-col items-center justify-center gap-2",
+                "flex items-center justify-center gap-2",
 
                 // Variant
 
@@ -114,7 +115,9 @@ export default function Button({
 
             {/* Content */}
 
-            <span className="flex items-center justify-center gap-2">{children}</span>
+            <span className="flex items-center justify-center gap-2">
+                {children}
+            </span>
         </button>
     );
 }

@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     
     # Local apps
     "apps.accounts",
+    "apps.momentum",
     "apps.habit",
 ]
 
