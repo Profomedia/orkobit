@@ -6,6 +6,7 @@ import {useAuthStore} from "../store/authStore";
 
 import {loginUser} from "../services/authService";
 import { getApiError } from "@/utils/getApiError";
+import { notify } from "@/utils/notifications/toast";
 
 export default function LoginPage() {
     const navigate = useNavigate();
@@ -16,19 +17,15 @@ export default function LoginPage() {
         username: string;
         password: string;
     }) => {
-        console.log("LOGIN START");
 
         try {
             const response = await loginUser(data);
 
-            console.log("LOGIN SUCCESS", response);
 
             setTokens(response.access, response.refresh);
-
+            notify.success("Welcome back 👋");
             navigate("/");
         } catch (error) {
-            console.log("LOGIN FAILED", error);
-
             throw new Error(getApiError(error));
         }
     };

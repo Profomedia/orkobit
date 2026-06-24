@@ -10,6 +10,7 @@ import App from "./App";
 import "./styles/index.css";
 
 import {queryClient,} from "./lib/react-query";
+import Toaster from "./components/ui/Toaster";
 
 const rootElement = document.getElementById("root");
 
@@ -22,6 +23,7 @@ ReactDOM.createRoot(rootElement).render(
         <QueryClientProvider client={queryClient}>
             <BrowserRouter>
                 <App />
+                <Toaster />
             </BrowserRouter>
         </QueryClientProvider>
     </React.StrictMode>,

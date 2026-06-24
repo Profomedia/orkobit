@@ -86,10 +86,23 @@ lint:
 # --------------------------------------------------
 
 worker:
-	$(COMPOSE) exec worker bash
+	$(COMPOSE) logs -f worker 
+
+worker-log:
+	$(COMPOSE) logs -f orkobit_worker 
 
 restart-worker:
 	$(COMPOSE) restart worker
+
+
+# --------------------------------------------------
+# REDIS
+# --------------------------------------------------
+red-ping:
+	$(COMPOSE) exec redis redis-cli ping
+
+
+
 
 # --------------------------------------------------
 # DATABASE

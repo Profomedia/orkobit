@@ -5,6 +5,11 @@ import {zodResolver} from "@hookform/resolvers/zod";
 import {useCreateHabit} from "../hooks/useCreateHabit";
 
 import {type CreateHabitFormValues, createHabitSchema} from "@/features/habits/schema/createHabitSchema";
+import { notify } from "@/utils/notifications/toast";
+import {  useNavigate } from "react-router-dom";
+import { getApiError } from "@/utils/getApiError";
+import Button from "@/components/ui/Button";
+
 
 const INPUT_STYLES = `
   w-full
@@ -22,7 +27,7 @@ const INPUT_STYLES = `
 
 export default function CreateHabitForm() {
     const mutation = useCreateHabit();
-
+    const navigate = useNavigate();
     const {
         register,
         handleSubmit,
@@ -46,11 +51,18 @@ export default function CreateHabitForm() {
 
     async function onSubmit(values: CreateHabitFormValues) {
         try {
-            await mutation.mutateAsync(values);
+            await notify.promise(mutation.mutateAsync(values), {
+                loading: "Creating habit...",
+                success: "Habit created",
+                error: "Failed to create habit",
+            });
 
             reset();
+                navigate(-1)
         } catch (error) {
-            console.error("Failed to create habit", error);
+            notify.error(getApiError(error));
+
+            console.error(error);
         }
     }
 
@@ -61,9 +73,17 @@ export default function CreateHabitForm() {
             {/* ---------------------- */}
 
             <div className="space-y-1">
-                <input {...register("name")} placeholder="Workout" className={INPUT_STYLES} />
+                <input
+                    {...register("name")}
+                    placeholder="Workout"
+                    className={INPUT_STYLES}
+                />
 
-                {errors.name && <p className="text-sm text-red-400">{errors.name.message}</p>}
+                {errors.name && (
+                    <p className="text-sm text-red-400">
+                        {errors.name.message}
+                    </p>
+                )}
             </div>
 
             {/* ---------------------- */}
@@ -71,9 +91,18 @@ export default function CreateHabitForm() {
             {/* ---------------------- */}
 
             <div className="space-y-1">
-                <textarea {...register("description")} placeholder="Optional description" rows={4} className={INPUT_STYLES} />
+                <textarea
+                    {...register("description")}
+                    placeholder="Optional description"
+                    rows={4}
+                    className={INPUT_STYLES}
+                />
 
-                {errors.description && <p className="text-sm text-red-400">{errors.description.message}</p>}
+                {errors.description && (
+                    <p className="text-sm text-red-400">
+                        {errors.description.message}
+                    </p>
+                )}
             </div>
 
             {/* ---------------------- */}
@@ -91,7 +120,11 @@ export default function CreateHabitForm() {
                     <option value="rating">Rating</option>
                 </select>
 
-                {errors.habit_type && <p className="text-sm text-red-400">{errors.habit_type.message}</p>}
+                {errors.habit_type && (
+                    <p className="text-sm text-red-400">
+                        {errors.habit_type.message}
+                    </p>
+                )}
             </div>
 
             {/* ---------------------- */}
@@ -107,12 +140,20 @@ export default function CreateHabitForm() {
                             valueAsNumber: true,
                         })}
                         placeholder={
-                            selectedType === "timer" ? "Target seconds" : selectedType === "rating" ? "Target rating" : "Target value"
+                            selectedType === "timer"
+                                ? "Target seconds"
+                                : selectedType === "rating"
+                                  ? "Target rating"
+                                  : "Target value"
                         }
                         className={INPUT_STYLES}
                     />
 
-                    {errors.target_value && <p className="text-sm text-red-400">{errors.target_value.message}</p>}
+                    {errors.target_value && (
+                        <p className="text-sm text-red-400">
+                            {errors.target_value.message}
+                        </p>
+                    )}
                 </div>
             )}
 
@@ -120,25 +161,15 @@ export default function CreateHabitForm() {
             {/* Submit */}
             {/* ---------------------- */}
 
-            <button
+            <Button
                 type="submit"
+                variant="primary"
+                fullWidth
                 disabled={mutation.isPending}
-                className="
-          w-full
-          rounded-xl
-          bg-white
-          px-4
-          py-3
-          font-medium
-          text-black
-          transition-opacity
-          hover:opacity-90
-          disabled:cursor-not-allowed
-          disabled:opacity-50
-        "
+                isLoading={mutation.isPending}
             >
                 {mutation.isPending ? "Creating..." : "Create Habit"}
-            </button>
+            </Button>
         </form>
     );
 }

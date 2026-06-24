@@ -110,12 +110,45 @@ services:
     ports:
       - "8089:8080"
   redis:
-    image: redis:7
-
+    image: redis:7-alpine
     container_name: orkobit_redis
     restart: unless-stopped
     ports:
       - "6329:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
 
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  beat:
+    build:
+      context: .
+      dockerfile: infrastructure/docker/backend/Dockerfile.dev
+
+    container_name: orkobit_beat
+
+    working_dir: /app/backend
+    restart: unless-stopped
+
+    volumes:
+      - ./backend:/app/backend
+
+    env_file:
+      - .env
+
+    depends_on:
+      - db
+      - redis
+
+    command: >
+      celery -A config beat -l info
+
+  
 volumes:
   postgres_data:
+  redis_data:
